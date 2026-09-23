@@ -13,7 +13,7 @@ for f in sorted(src.glob('*.src.html')):
     if page=='index': out=out.replace('https://rtbgym.com.au/index.html','https://rtbgym.com.au/')
     (docs/(page+'.html')).write_text(out); print(f'  docs/{page}.html  {len(out)//1024} KB')
 # old Squarespace URLs -> new pages (GitHub Pages has no server redirects, so folder stubs)
-REDIRECTS={'21-day-strength-trial':'reset.html','21-day-strength':'reset.html#book','program':'app.html',
+REDIRECTS={'21-day-strength-trial':'reset.html','21-day-strength':'reset.html','program':'app.html',
  'book-the-gym':'studio.html','home':'./','contact':'./#start','services':'./#start','trial':'reset.html'}
 for old,new in REDIRECTS.items():
     d=docs/old; d.mkdir(exist_ok=True)

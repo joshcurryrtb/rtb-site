@@ -217,6 +217,26 @@ gtag('js',new Date());gtag('config','G-8KKB094G2J');gtag('config','AW-1687163028
     </div>
   </div>
 </section>
+<script>
+/* Land at the top. Ads and old links arrive with #book, and the Hapana widget grabs focus as it loads,
+   both of which dragged visitors straight to the calendar. Only an on-site "Book a free call" click
+   from another RTB page may jump to #book. */
+(function(){
+  var internal = document.referrer.indexOf(location.origin) === 0;
+  if (location.hash === '#book' && internal) return;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  var userMoved = false;
+  ['wheel','touchstart','keydown','mousedown'].forEach(function(e){
+    addEventListener(e, function(){ userMoved = true; }, {passive:true, once:true});
+  });
+  function top(){ if (!userMoved && scrollY > 0) scrollTo(0,0); }
+  top();
+  addEventListener('scroll', top, {passive:true});
+  addEventListener('load', top);
+  setTimeout(function(){ removeEventListener('scroll', top); }, 6000);
+})();
+</script>
 <div class="sticky"><a href="#book" data-cta="sticky">Book a free call ▸</a></div>
 <footer>
   <div class="fgrid">
