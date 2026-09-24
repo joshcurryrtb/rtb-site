@@ -67,8 +67,11 @@ try{last=+localStorage.getItem(key)||0}catch(e){}
 if(now-last<12*3600*1000)return;
 try{localStorage.setItem(key,String(now))}catch(e){}
 var id='bk_'+src+'_'+now.toString(36)+Math.random().toString(36).slice(2,7);
-if(window.fbq){fbq('track','Lead',{content_name:'RTB '+src,value:0,currency:'AUD'},{eventID:id+'_l'});fbq('track','Schedule',{content_name:'RTB '+src},{eventID:id+'_s'});}
-if(window.gtag){gtag('event','generate_lead',{event_label:src});}})();
+/* Only a free consult booking is an ad conversion. Onboarding calls and gym visits land here too;
+   they get their own custom event so they never inflate Schedule/Lead in Ads Manager. */
+if(window.fbq){if(src==='call'){fbq('track','Lead',{content_name:'RTB call',value:0,currency:'AUD'},{eventID:id+'_l'});fbq('track','Schedule',{content_name:'RTB call'},{eventID:id+'_s'});}
+else fbq('trackCustom','OtherBooking',{content_name:'RTB '+src},{eventID:id+'_o'});}
+if(window.gtag){gtag('event',src==='call'?'generate_lead':'other_booking',{event_label:src});}})();
 </script>
 <footer>
   <div class="fgrid">

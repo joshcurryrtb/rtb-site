@@ -273,3 +273,7 @@ footer .fbot{max-width:1160px;margin:34px auto 0;padding-inline:var(--pad);displ
 .gallery img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:#111}
 @media(max-width:900px){.gallery{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:620px){.gallery{grid-template-columns:repeat(2,1fr);gap:6px}}
+/* Reset hero: highlight + strike */
+h1 .hl{display:inline-block;background:var(--red);color:#fff;line-height:.88;padding:.06em .1em .01em;margin-bottom:.06em}
+h1 .strike{position:relative;text-decoration:none;color:var(--grey);white-space:nowrap}
+h1 .strike::after{content:"";position:absolute;left:-4%;right:-4%;top:50%;height:.12em;background:var(--red);transform:rotate(-6deg);border-radius:2px}
