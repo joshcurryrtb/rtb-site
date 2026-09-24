@@ -8,7 +8,15 @@
   </div>
 </section>
 <script>
+/* One count per booking. This page reloads (refresh, back button, reopened tab) and each load used to fire
+   Lead + Schedule again, inflating Ads Manager. Fire once per browser per 12 hours, with an eventID so Meta can
+   dedupe anything that still slips through. */
 (function(){var src=(location.search.match(/src=([a-z]+)/)||[])[1]||'unknown';
-if(window.fbq){fbq('track','Lead',{content_name:'RTB '+src,value:0,currency:'AUD'});fbq('track','Schedule',{content_name:'RTB '+src});}
+var key='rtb_booked_'+src, now=Date.now(), last=0;
+try{last=+localStorage.getItem(key)||0}catch(e){}
+if(now-last<12*3600*1000)return;
+try{localStorage.setItem(key,String(now))}catch(e){}
+var id='bk_'+src+'_'+now.toString(36)+Math.random().toString(36).slice(2,7);
+if(window.fbq){fbq('track','Lead',{content_name:'RTB '+src,value:0,currency:'AUD'},{eventID:id+'_l'});fbq('track','Schedule',{content_name:'RTB '+src},{eventID:id+'_s'});}
 if(window.gtag){gtag('event','generate_lead',{event_label:src});}})();
 </script>
