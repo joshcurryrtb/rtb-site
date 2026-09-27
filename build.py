@@ -10,6 +10,17 @@ for f in sorted(src.glob('*.src.html')):
     m=re.search(r'<!--\s*title:(.*?)\|desc:(.*?)-->',body,re.S)
     title=m.group(1).strip() if m else 'RTB Gym'; desc=m.group(2).strip() if m else ''
     out=head.replace('__TITLE__',title).replace('__DESC__',desc).replace('__PAGE__',page)+body+foot
+    if page=='reset':  # ad landing page: no way off the page except booking
+        out=re.sub(r'<a href="index.html">(<img class="logo"[^>]*>)</a>',r'\1',out)
+        out=re.sub(r'\s*<button class="burger".*?</button>','',out,flags=re.S)
+        out=re.sub(r'\s*<div class="links">.*?</div>','',out,count=1,flags=re.S)
+        out=out.replace('href="reset.html#book"','href="#book"')
+        f0,f1=out.index('<footer>'),out.index('</footer>')+9
+        ft=out[f0:f1]
+        ft=re.sub(r'\s*<div>\s*<h4>Start here</h4>.*?</div>','',ft,flags=re.S)
+        ft=re.sub(r'<li><a [^>]*>.*?</a></li>\s*','',ft)
+        ft=re.sub(r' &middot; <a [^>]*>.*?</a>','',ft)
+        out=out[:f0]+ft+out[f1:]
     if page=='index': out=out.replace('https://rtbgym.com.au/index.html','https://rtbgym.com.au/')
     (docs/(page+'.html')).write_text(out); print(f'  docs/{page}.html  {len(out)//1024} KB')
 # old Squarespace URLs -> new pages (GitHub Pages has no server redirects, so folder stubs)
