@@ -392,7 +392,7 @@ const GOALFX={
 function steps(){
  const goals=GOALS[G].slice(); if(G==='men'&&GYM==='chelsea') goals.push("Stay fit for my family");
  const list=[
- {id:'contact',type:'contact',q:'First, who are we building this plan for?',sub:'Simply by applying you will receive something cool that will help you with your training. 100% free.'},
+ {id:'contact',type:'contact',q:'First, who are we building this plan for?',sub:'Apply and we send you 7 days of the RTB online program, free, straight to your inbox.'},
  {id:'goal',type:'single',q:'What do you want most from the next 21 days?',opts:goals,
   reply:a=>GOALFX[a.goal][0],qaFn:a=>GOALFX[a.goal].slice(1)},
  {id:'tried',type:'multi',q:"What have you tried so far?",sub:'Pick all that apply.',opts:["Running or cardio","HIIT or group classes","Gym on my own","Personal trainer","Nothing yet"],
