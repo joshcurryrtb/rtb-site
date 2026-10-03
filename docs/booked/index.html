@@ -81,7 +81,13 @@ try{localStorage.setItem(key,String(now))}catch(e){}
 var id='bk_'+src+'_'+now.toString(36)+Math.random().toString(36).slice(2,7);
 /* Only a free consult booking is an ad conversion. Onboarding calls and gym visits land here too;
    they get their own custom event so they never inflate Schedule/Lead in Ads Manager. */
-if(window.fbq){if(src==='call'){fbq('track','Lead',{content_name:'RTB call',value:0,currency:'AUD'},{eventID:id+'_l'});fbq('track','Schedule',{content_name:'RTB call'},{eventID:id+'_s'});}
+/* Apply form leads (rtb_apply in localStorage, Lead already sent at step 1 of the form) get Schedule ONLY,
+   tied to their application id, so one person is never counted as two Leads. */
+var ap=null;try{ap=JSON.parse(localStorage.getItem('rtb_apply')||'null')}catch(e){}
+if(ap&&!(ap.sid&&ap.f_lead&&now-ap.t<30*864e5))ap=null;
+if(window.fbq){if(src==='call'&&ap){if(!ap.f_sch){ap.f_sch=1;try{localStorage.setItem('rtb_apply',JSON.stringify(ap))}catch(e){}
+fbq('track','Schedule',{content_name:'RTB call',segment:(ap.gym==='windsor'?'win':'ch')+'-'+({women:'f',men:'m',all:'a'})[ap.page],gym:ap.gym,concept:ap.concept||''},{eventID:'ap_'+ap.sid+'_sch'});}}
+else if(src==='call'){fbq('track','Lead',{content_name:'RTB call',value:0,currency:'AUD'},{eventID:id+'_l'});fbq('track','Schedule',{content_name:'RTB call'},{eventID:id+'_s'});}
 else fbq('trackCustom','OtherBooking',{content_name:'RTB '+src},{eventID:id+'_o'});}
 if(window.gtag){gtag('event',src==='call'?'generate_lead':'other_booking',{event_label:src});}})();
 </script>
@@ -124,7 +130,7 @@ if(window.gtag){gtag('event',src==='call'?'generate_lead':'other_booking',{event
   </div>
   <div class="fbot">
     <span>No Cardio. Just Results.</span>
-    <span>RTB Gym &copy; 2026 &middot; <a href="https://rtbgym.com.au">rtbgym.com.au</a></span>
+    <span>RTB Gym &copy; 2026 &middot; <a href="https://rtbgym.com.au">rtbgym.com.au</a> &middot; <a href="/privacy.html">Privacy</a></span>
   </div>
 </footer>
 <script>
