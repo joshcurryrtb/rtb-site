@@ -490,7 +490,8 @@ function result(){
  <p class="unlock"><a href="#" id="unlock">Back to the page</a></p>`;
  $('#unlock').onclick=ev=>{ev.preventDefault();document.body.classList.remove('locked');$('#apply').scrollIntoView()};
  /* The real Hapana call calendar, with their details already filled in. After booking it sends them to /booked. */
- const q=new URLSearchParams({first_name:A.first,email:A.email,phone:A.mobile});
+ /* Prefill the Grow booking form: full_name fills its Full Name box, the location key fills its required dropdown. */
+ const q=new URLSearchParams({first_name:A.first,full_name:A.first,email:A.email,phone:A.mobile,which_location_are_you_interested_in:GYM==='chelsea'?'Chelsea Heights':'Windsor'});
  $('#calwrap').innerHTML=`<iframe src="https://grow-api.hapana.com/widget/booking/${CAL}?${q}" allow="payment" scrolling="no" title="Book your free call" id="${CAL}_apply"></iframe>`;
  if(!window._rtbEmbed){window._rtbEmbed=1;const sc=document.createElement('script');sc.src='https://grow-api.hapana.com/js/form_embed.js';document.body.appendChild(sc)}
  toStep();
