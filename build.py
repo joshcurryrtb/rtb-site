@@ -25,8 +25,6 @@ for page,body in sources:
             out=out.replace('href="apply.html#apply"','href="#apply"').replace('href="apply.html"','href="#apply"')
             if page!='apply': out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
         out=out.replace('href="reset.html#book"','href="#book"')
-    if page=='reset':  # 6 Oct 2026: the neutral apply page replaced the old 21 Day Reset page. The URL stays alive as a redirect for old ads, bios and Google.
-        out='<!DOCTYPE html><html><head><meta charset="utf-8"><title>21 Day Strength Reset | RTB Gym</title><link rel="canonical" href="https://rtbgym.com.au/apply.html"><meta http-equiv="refresh" content="0;url=/apply.html"><script>location.replace("/apply.html"+location.search+(location.hash==="#book"?"#apply":location.hash))</script></head><body><a href="/apply.html">Continue to the 21 Day Strength Reset</a></body></html>'
         f0,f1=out.index('<footer>'),out.index('</footer>')+9
         ft=out[f0:f1]
         ft=re.sub(r'\s*<div>\s*<h4>Start here</h4>.*?</div>','',ft,flags=re.S)
@@ -34,6 +32,8 @@ for page,body in sources:
         ft=re.sub(r' &middot; <a [^>]*>.*?</a>','',ft)
         out=out[:f0]+ft+out[f1:]
     if page=='index': out=out.replace('https://rtbgym.com.au/index.html','https://rtbgym.com.au/')
+    if page=='reset':  # 6 Oct 2026: the neutral apply page replaced the old 21 Day Reset page. The URL stays alive as a redirect for old ads, bios and Google.
+        out='<!DOCTYPE html><html><head><meta charset="utf-8"><title>21 Day Strength Reset | RTB Gym</title><link rel="canonical" href="https://rtbgym.com.au/apply.html"><meta http-equiv="refresh" content="0;url=/apply.html"><script>location.replace("/apply.html"+location.search+(location.hash==="#book"?"#apply":location.hash))</script></head><body><a href="/apply.html">Continue to the 21 Day Strength Reset</a></body></html>'
     (docs/(page+'.html')).write_text(out); print(f'  docs/{page}.html  {len(out)//1024} KB')
 # old Squarespace URLs -> new pages (GitHub Pages has no server redirects, so folder stubs)
 REDIRECTS={'21-day-strength-trial':'apply.html','21-day-strength':'apply.html','program':'app.html',
