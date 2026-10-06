@@ -21,9 +21,12 @@ for page,body in sources:
         out=re.sub(r'\s*<button class="burger".*?</button>','',out,flags=re.S)
         out=re.sub(r'\s*<div class="links">.*?</div>','',out,count=1,flags=re.S)
         if page in APPLY:
-            out=out.replace('<a class="cta" href="reset.html#book">Book a free call</a>','<a class="cta" href="#apply">Explore my options</a>')
+            out=out.replace('<a class="cta" href="apply.html#apply">Book a free call</a>','<a class="cta" href="#apply">Explore my options</a>')
+            out=out.replace('href="apply.html#apply"','href="#apply"').replace('href="apply.html"','href="#apply"')
             if page!='apply': out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
         out=out.replace('href="reset.html#book"','href="#book"')
+    if page=='reset':  # 6 Oct 2026: the neutral apply page replaced the old 21 Day Reset page. The URL stays alive as a redirect for old ads, bios and Google.
+        out='<!DOCTYPE html><html><head><meta charset="utf-8"><title>21 Day Strength Reset | RTB Gym</title><link rel="canonical" href="https://rtbgym.com.au/apply.html"><meta http-equiv="refresh" content="0;url=/apply.html"><script>location.replace("/apply.html"+location.search+(location.hash==="#book"?"#apply":location.hash))</script></head><body><a href="/apply.html">Continue to the 21 Day Strength Reset</a></body></html>'
         f0,f1=out.index('<footer>'),out.index('</footer>')+9
         ft=out[f0:f1]
         ft=re.sub(r'\s*<div>\s*<h4>Start here</h4>.*?</div>','',ft,flags=re.S)
@@ -33,8 +36,8 @@ for page,body in sources:
     if page=='index': out=out.replace('https://rtbgym.com.au/index.html','https://rtbgym.com.au/')
     (docs/(page+'.html')).write_text(out); print(f'  docs/{page}.html  {len(out)//1024} KB')
 # old Squarespace URLs -> new pages (GitHub Pages has no server redirects, so folder stubs)
-REDIRECTS={'21-day-strength-trial':'reset.html','21-day-strength':'reset.html','program':'app.html',
- 'book-the-gym':'studio.html','home':'./','contact':'./#start','services':'./#start','trial':'reset.html'}
+REDIRECTS={'21-day-strength-trial':'apply.html','21-day-strength':'apply.html','program':'app.html',
+ 'book-the-gym':'studio.html','home':'./','contact':'./#start','services':'./#start','trial':'apply.html'}
 for old,new in REDIRECTS.items():
     d=docs/old; d.mkdir(exist_ok=True)
     (d/'index.html').write_text(f'<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/{new}"><link rel="canonical" href="https://rtbgym.com.au/{new}"><title>RTB Gym</title></head><body><a href="/{new}">Continue</a></body></html>')
@@ -45,7 +48,7 @@ for p in ['index','reset','experience','workshop','app','about','thanks','studio
 (bk/'index.html').write_text(t)
 (docs/'CNAME').write_text('rtbgym.com.au\n')
 (docs/'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: https://rtbgym.com.au/sitemap.xml\n')
-pages=['','reset.html','apply.html','experience.html','workshop.html','app.html','about.html','studio.html','privacy.html']
+pages=['','apply.html','experience.html','workshop.html','app.html','about.html','studio.html','privacy.html']
 (docs/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>https://rtbgym.com.au/{p}</loc></url>\n' for p in pages)+'</urlset>\n')
 (docs/'404.html').write_text('<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="2;url=/"><title>RTB Gym</title><style>body{font-family:system-ui;background:#F5F5F5;color:#000;display:grid;place-items:center;height:100vh;margin:0;text-align:center}</style></head><body><div><h1>Page moved.</h1><p>Taking you to <a href="/">rtbgym.com.au</a>.</p></div></body></html>')
 print('redirects, booked, CNAME, robots, sitemap, 404 written')
