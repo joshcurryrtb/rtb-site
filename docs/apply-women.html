@@ -321,6 +321,9 @@ function track(ev,key,params){
  if(window.gtag) gtag('event','apply_'+key,{segment:seg(),gym:GYM});
 }
 
+/* Quiz started: answered the first question. Custom event so the funnel shows where people drop before the contact step. */
+function started(){if(ST.f_st)return;ST.f_st=1;save();if(!LIVE)return;if(window.fbq)fbq('trackCustom','ApplyStarted',{segment:seg(),gym:GYM,concept:ST.concept||''});if(window.gtag)gtag('event','apply_started',{segment:seg(),gym:GYM})}
+
 /* Server calls run in order and retry, so a slow first call can't be overtaken by a later one. */
 let Q=Promise.resolve(), CONTACT=null;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -392,7 +395,6 @@ const GOALFX={
 function steps(){
  const goals=GOALS[G].slice(); if(G==='men'&&GYM==='chelsea') goals.push("Stay fit for my family");
  const list=[
- {id:'contact',type:'contact',q:'First, who are we building this plan for?',sub:'Apply and we send you 7 days of the RTB online program, free, straight to your inbox.'},
  {id:'goal',type:'single',q:'What do you want most from the next 21 days?',opts:goals,
   reply:a=>GOALFX[a.goal][0],qaFn:a=>GOALFX[a.goal].slice(1)},
  {id:'tried',type:'multi',q:"What have you tried so far?",sub:'Pick all that apply.',opts:["Running or cardio","HIIT or group classes","Gym on my own","Personal trainer","Nothing yet"],
@@ -401,6 +403,7 @@ function steps(){
  {id:'block',type:'multi',q:"What's stopped you getting results so far?",sub:'Pick all that apply.',opts:["Not enough time","No plan, not sure what to do","Motivation drops off","Weights feel intimidating","Work and family come first","Old injury"],
   reply:a=>`${a._cur||(a.block||[])[0]||'That'}. We hear that a lot.`,
   qaFn:a=>{const m={"Not enough time":"Sessions are 50 minutes. Warm up, lift, done. You're in and out before the day starts.","No plan, not sure what to do":"You never have to think. The program is written, the coach runs it, you just lift.","Motivation drops off":"Max 12 people and a coach who knows your name and expects you. It's hard to ghost that.","Weights feel intimidating":"Classes are small, capped at 12, and everyone on the 21 Day pack gets extra help from the coach. Every lift is taught. You start at your weight, not anyone else's.","Work and family come first":"We're a classes only gym, so there's a huge timetable from 5am into the evening. Flexible booking lets you move your sessions around when life gets busy.","Old injury":"Our coaches adapt lifts around old injuries. Tell us about it on your call."};return["How does RTB fix that?",m[a._cur||(a.block||[])[0]]||m["Not enough time"]]}},
+ {id:'contact',type:'contact',q:'Nice. Who are we building this plan for?',sub:'Apply and we send you 7 days of the RTB online program, free, straight to your inbox.'},
  {id:'days',type:'single',q:'How many sessions a week can you give it?',opts:["2","3","4 or more"],times:true,
   reply:a=>({"2":"2 a week is great for beginners, sport people or to add to your other training. You can always upgrade later.","3":"3 a week is our most popular option.","4 or more":"4 or more a week is our transformation zone."})[a.days],
   qa:["Do I need to be fit before I start?","No. Everyone starts somewhere, and the weights start where you are. The fitness comes from the training."]},
@@ -458,7 +461,7 @@ function render(){
   document.body.classList.add('applied','locked');next()};
  if(s.type==='text') $('#go').onclick=()=>{A.why=$('#t1').value.trim();next()};
  document.querySelectorAll('.opt:not(.gymopt)').forEach(b=>b.onclick=()=>{
-  const o=b.dataset.o;
+  const o=b.dataset.o; started();
   if(s.type==='single'){A[s.id]=o;document.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x===b));showReply(s,b)}
   else{A[s.id]=A[s.id]||[];const k=A[s.id].indexOf(o);k<0?A[s.id].push(o):A[s.id].splice(k,1);b.classList.toggle('on');
    if(k<0){A._cur=o;showReply(s,b)}else if(A._cur===o){const rest=A[s.id];if(rest.length){A._cur=rest[rest.length-1];showReply(s,document.querySelector(`.opt[data-o="${CSS.escape(A._cur)}"]`))}else{A._cur=null;$('#reply').classList.remove('show')}}}
