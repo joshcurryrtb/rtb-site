@@ -93,7 +93,23 @@ body.applied{padding-bottom:0!important}
 @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .nav2{display:flex;justify-content:space-between;align-items:center;margin-top:22px;gap:12px}
 .back{background:none;border:none;font:500 14px 'Epilogue',sans-serif;text-transform:uppercase;letter-spacing:.06em;color:var(--grey);cursor:pointer}
-.times{font:500 14px/1.6 'Epilogue',sans-serif;background:#F5F5F5;border:1px dashed var(--line);padding:12px 14px;border-radius:10px;margin:14px 0 0}
+.times{font:500 14px/1.6 'Epilogue',sans-serif;background:#F5F5F5;border:1px solid var(--line);padding:12px 14px;border-radius:10px;margin:14px 0 0}
+.times>b{display:block;font:600 12px 'Epilogue',sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.times p{margin:6px 0 0;color:var(--grey);font-size:13px}
+/* class times: one card per gym, a row per part of the day */
+.tt{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:14px;margin-top:36px}
+.ttg{background:#fff;border:1px solid var(--line);padding:24px 26px}
+.ttg h3{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;font-size:32px;line-height:1;margin:0}
+.ttg .ad{margin:6px 0 4px;color:var(--grey);font:400 15px 'Epilogue',sans-serif}
+.ttd{font:600 12px 'Epilogue',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--red);border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
+.ttr{display:grid;grid-template-columns:80px 1fr;align-items:center;gap:10px;margin-top:10px}
+.ttr>span{font:600 12px 'Epilogue',sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--grey)}
+.ttr>div{display:flex;flex-wrap:wrap;gap:6px}
+.ttr i{font-style:normal;font:400 22px/1 'Anton',sans-serif;background:#000;color:#fff;padding:8px 10px 6px;border-radius:8px}
+.ttr i small{font:700 11px 'Epilogue',sans-serif;text-transform:uppercase;margin-left:2px}
+.times .ttd{margin-top:8px;padding-top:8px}
+.times .ttr{grid-template-columns:64px 1fr;margin-top:6px;gap:8px}
+.times .ttr i{font-size:17px;padding:6px 8px 4px;border-radius:6px}
 .mirror{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:22px 0}
 .mirror div{background:#F5F5F5;border:1px solid var(--line);padding:14px;border-radius:10px}
 .mirror small{display:block;font:600 11px 'Epilogue',sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);margin-bottom:4px}
@@ -146,6 +162,10 @@ body.inapply .sticky{display:none!important}
  .consent{font-size:12px;line-height:1.4;margin:4px 0 2px}
  .err{min-height:0}
  .times{font-size:13px;line-height:1.45;padding:8px 10px;margin-top:10px}
+ .ttg{padding:20px}
+ .ttr{grid-template-columns:62px 1fr;gap:8px}
+ .ttr i{font-size:19px;padding:7px 8px 5px}
+ .ttr i small{font-size:10px}
  .reply{padding:13px 15px;margin-top:4px;border-radius:10px}
  .reply .ref{font-size:15px;line-height:1.3;margin:0 0 6px}
  .reply .qa b{font-size:10.5px;margin-bottom:3px}
@@ -249,6 +269,15 @@ body.locked .nav2{position:sticky;bottom:0;z-index:6;background:#fff;margin:12px
       <div class="card"><h3>The RTB Portal</h3><p>Your progress, your streaks and your coach, keeping you accountable.</p></div>
       <div class="card"><h3>Nutrition with Coach Liz</h3><p>Optional add on for members who want their food sorted too.</p></div>
     </div>
+  </div>
+</section>
+
+<section id="times">
+  <div class="wrap">
+    <div class="label kicker">Class times</div>
+    <h2>Before work.<br>Or after it.</h2>
+    <p class="lede">Every session is 50 minutes and capped at 12. Book the times that suit you and move them when life gets busy.</p>
+    <div class="tt" id="tt"></div>
   </div>
 </section>
 
@@ -363,10 +392,16 @@ const COPY={
   'men-chelsea':["Family comes first","Kids, work, the house. Everyone gets your time. These 50 minutes keep you strong for them."],
   'all-windsor':["No time","Work runs your calendar. Fifty minutes, coached, in and out before the day starts."],
   'all-chelsea':["Family comes first","Kids, work, the house. Everyone gets your time. These 50 minutes keep you strong for them."]},
- times:{windsor:"Mon to Fri: 5:20am, 6am, 7:40am, 10:30am, 4:40pm, 5:30pm, 6:20pm.",
-        chelsea:"Mon to Fri: 5am, 6am, 7am, 9:30am, 5:30pm, 6:30pm. Saturday 8am."},
  addr:{windsor:'4 Duke Street, Windsor',chelsea:'21/107 Wells Road, Chelsea Heights'}
 };
+
+/* Class timetable. Edit times here; the page section and the sessions step both read it. */
+const TT={
+ windsor:[['Monday to Friday',[['Morning',['5:20am','6:00am','7:40am']],['Midday',['10:30am']],['Evening',['4:40pm','5:30pm','6:20pm']]]]],
+ chelsea:[['Monday to Friday',[['Morning',['5:00am','6:00am','7:00am']],['Midday',['9:30am']],['Evening',['5:30pm','6:30pm']]]],
+          ['Saturday',[['Morning',['8:00am']]]]]
+};
+const ttHTML=g=>TT[g].map(([d,rows])=>`<div class="ttd">${d}</div>`+rows.map(([p,ts])=>`<div class="ttr"><span>${p}</span><div>${ts.map(t=>`<i>${t.slice(0,-2)}<small>${t.slice(-2)}</small></i>`).join('')}</div></div>`).join('')).join('');
 
 const GOALS={
  women:["Get strong and toned","Lose body fat without cardio","Community and vibes","Learn to lift weights safely","More energy and headspace","Honestly, all of it"],
@@ -442,7 +477,7 @@ function render(){
   h+=`<label class="field"><textarea id="t1" rows="3" maxlength="1000" placeholder="${s.ph}">${esc(A.why||'')}</textarea></label>`;
  } else {
   h+=`<div class="opts">${s.opts.map(o=>`<button class="opt ${s.type==='multi'?'multi':''} ${(A[s.id]||[]).includes?.(o)||A[s.id]===o?'on':''}" data-o="${esc(o)}">${o}</button>`).join('')}</div>`;
-  if(s.times) h+=`<div class="times"><b>${COPY.loc[GYM]}:</b> ${COPY.times[GYM]} Sessions are 50 minutes.</div>`;
+  if(s.times&&GYM) h+=`<div class="times"><b>${COPY.loc[GYM]} class times</b>${ttHTML(GYM)}<p>Sessions are 50 minutes.</p></div>`;
  }
  const prim=s.type==='contact'?'<button type="submit" form="cf" class="cta" id="go">Apply now</button>':s.type==='text'?`<button class="cta" id="go">${i===S.length-1?'See my result':'Continue'}</button>`:s.type==='multi'?'<button class="cta" id="go">Continue</button>':'<span></span>';
  h+=`<div class="reply" id="reply"></div><div class="nav2">${i>0?'<button class="back" id="back">← Back</button>':'<span></span>'}${prim}</div>`;
@@ -517,6 +552,7 @@ function paint(){
  $('#pains').innerHTML=[...COPY.pains[G],COPY.pain4[seg2]].map(p=>`<div class="ex"><b>${p[0]}</b><p>${p[1]}</p></div>`).join('');
  const ba=({women:[1,2,3,4,5,6,7,8],men:[9,10,11,12,13,14,15,16],all:[1,9,2,10,3,11,4,12]})[G];
  $('#gallery').innerHTML=ba.map(n=>`<img src="img/ba-${String(n).padStart(2,'0')}.jpg" alt="RTB member result" loading="lazy">`).join('');
+ $('#tt').innerHTML=(GYM?[GYM]:['windsor','chelsea']).map(g=>`<div class="ttg"><h3>${COPY.loc[g]}</h3><p class="ad">${COPY.addr[g]}</p>${ttHTML(g)}</div>`).join('');
  $('#faq').innerHTML=FAQ.map((f,k)=>`<details ${k?'':'open'}><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join('');
 }
 paint();S=steps();render();
