@@ -122,7 +122,9 @@ body.applied{padding-bottom:0!important}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .gymopt small{display:block;font:400 14px/1.4 'Epilogue',sans-serif;color:var(--grey);margin-top:4px}
 .opt.on.gymopt small{color:#ccc}
-#calwrap iframe{width:100%;border:none;min-height:680px}
+#calwrap iframe,#quickcal iframe{width:100%;border:none;min-height:680px}
+#quickcal{background:#fff;border:1px solid var(--line);margin-top:32px}
+body.applied #quickbook{display:none}
 .eyebrow .pill:empty{display:none}
 .hero-photo.ba{aspect-ratio:auto;background:none}
 .hero-photo.ba img{position:static;height:auto}
@@ -287,6 +289,15 @@ body.locked .nav2{position:sticky;bottom:0;z-index:6;background:#fff;margin:12px
       <div class="prog"><i id="bar"></i></div>
       <div class="stepwrap" id="step"></div>
     </div>
+  </div>
+</section>
+
+<section id="quickbook">
+  <div class="wrap">
+    <div class="label kicker">Rather just talk?</div>
+    <h2>Skip the form.<br>Book a call.</h2>
+    <p class="lede">Pick a time for a free 15 minute call with a coach. Your goal, your times, and whether we're the right fit. No hard sell.</p>
+    <div id="quickcal"><iframe src="https://grow-api.hapana.com/widget/booking/8KzUE6BBWRni8g9f0wd5" scrolling="no" title="Book your free call" id="8KzUE6BBWRni8g9f0wd5_quick"></iframe></div>
   </div>
 </section>
 
@@ -556,7 +567,9 @@ function paint(){
  $('#faq').innerHTML=FAQ.map((f,k)=>`<details ${k?'':'open'}><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join('');
 }
 paint();S=steps();render();
-if('IntersectionObserver' in window)new IntersectionObserver(e=>document.body.classList.toggle('inapply',e[0].isIntersecting),{threshold:0.05}).observe($('#apply'));
+if(!window._rtbEmbed){window._rtbEmbed=1;const sc=document.createElement('script');sc.src='https://grow-api.hapana.com/js/form_embed.js';document.body.appendChild(sc)}
+/* Hide the sticky bar while the form or the quick booking calendar is on screen. */
+if('IntersectionObserver' in window){const seen=new Set();const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?seen.add(e.target):seen.delete(e.target));document.body.classList.toggle('inapply',seen.size>0)},{threshold:0.05});io.observe($('#apply'));io.observe($('#quickbook'))}
 })();
 </script>
 <footer>
