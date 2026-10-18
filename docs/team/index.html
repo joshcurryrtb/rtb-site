@@ -304,7 +304,11 @@ function openDrawer(id){
   const close = () => { openId = null; document.querySelectorAll('.scrim,.drawer').forEach(e => e.remove()); };
   document.querySelector('.scrim').onclick = close;
   document.querySelector('.drawer .x').onclick = close;
-  if (canPickCoach()) document.getElementById('fcbox').append(firstClassForm(m));
+  if (canPickCoach()) {
+    const g = $(`<div class="tabs" style="margin-top:14px;align-items:center"><span class="label" style="margin-right:4px">Trains at</span>${[['windsor','Windsor'],['chelsea','Chelsea']].map(([k,l]) => `<button class="tab ${m.gym === k ? 'on' : ''}" data-gym="${k}">${l}</button>`).join('')}</div>`);
+    g.querySelectorAll('[data-gym]').forEach(b => b.onclick = () => b.dataset.gym !== m.gym && run(() => call({action: 'gym', member_id: m.id, gym: b.dataset.gym}), 'Moved to ' + b.textContent));
+    document.getElementById('fcbox').append(g, firstClassForm(m));
+  }
   document.querySelectorAll('.outcome [data-o]').forEach(b => b.onclick = async () => {
     await run(() => call({action: 'outcome', member_id: m.id, outcome: b.dataset.o || null, note: document.getElementById('onote').value}), b.dataset.o === 'joined' ? 'Nice work' : 'Saved');
   });
@@ -341,6 +345,7 @@ function demoCall(b){
     }
     flash = coach.name + ' told by WhatsApp + email (preview: nothing sent)';
   }
+  if (b.action === 'gym') { const m = st.members.find(x => x.id === b.member_id); m.gym = b.gym; }
   if (b.action === 'outcome') {
     const m = st.members.find(x => x.id === b.member_id); m.outcome = b.outcome; m.outcome_note = b.note;
     st.jobs.filter(x => x.member_id === m.id && !x.result).forEach(x => { if (b.outcome) { x.result = 'skipped'; x.note = b.outcome === 'joined' ? 'Joined' : "Didn't join"; } });
