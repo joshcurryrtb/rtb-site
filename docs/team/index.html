@@ -1,0 +1,369 @@
+<meta charset="utf-8">
+<title>RTB 21 Day Activation</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F5F5;--card:#FFFFFF;--ink:#000;--grey:#797979;--line:#D9D9D9;--red:#FF0028;--soft:#F5F5F5;--r:14px;color-scheme:light}
+:root[data-theme="dark"]{color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Epilogue',system-ui,sans-serif;font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:'Anton',Impact,sans-serif;text-transform:uppercase;font-weight:400;line-height:1;letter-spacing:.01em}
+.label{font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--grey)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--card);color:var(--ink);border-bottom:1px solid var(--line)}
+.top .bar{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:12px 16px}
+.top img{height:30px;width:auto}
+.top .who{margin-left:auto;font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;opacity:.85}
+.top select{background:var(--card);color:var(--ink);border:1px solid var(--ink);border-radius:99px;padding:6px 10px;font:inherit;font-size:13px}
+main{max-width:880px;margin:0 auto;padding:22px 16px 80px}
+.hello h1{font-size:clamp(36px,9vw,56px);margin-top:8px}
+h1 em,h2 em{font-style:normal;background:var(--red);color:#fff;padding:.06em .14em 0;display:inline-block;line-height:1;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.kick{display:inline-block;width:24px;height:2px;background:var(--red);vertical-align:middle;margin-right:8px}
+.hello p{color:var(--grey);margin-top:8px;font-size:17px}
+.hello p b{color:var(--ink)}
+section{margin-top:30px}
+section>h2{font-size:24px;display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+section>h2 .n{font-family:'Epilogue';font-size:14px;color:var(--grey);font-weight:600}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.tab{border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:99px;padding:7px 14px;font:inherit;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;cursor:pointer}
+.tab.on{background:var(--ink);color:var(--bg)}
+.job{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:12px}
+.job.late{border:2px solid var(--red)}
+
+.job .head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.daypill{font-family:'Anton';font-size:15px;background:var(--ink);color:var(--bg);padding:4px 10px;border-radius:99px;letter-spacing:.04em}
+.job.late .daypill{background:var(--red);color:#fff}
+.job .name{font-weight:700;font-size:18px}
+.job .meta{color:var(--grey);font-size:13px;margin-left:auto}
+.late-tag{color:var(--red);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+.job h3{font-size:20px;margin-top:10px}
+.job .what{color:var(--grey);margin-top:6px;font-size:15px}
+.script{margin-top:10px;background:var(--soft);border:1px solid var(--line);padding:12px 14px;font-size:15px;white-space:pre-wrap;border-radius:10px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:99px;padding:9px 16px;font:inherit;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;text-decoration:none}
+.btn.solid{background:var(--ink);color:var(--bg)}
+.btn.ghost{border-color:var(--line);color:var(--grey)}
+.btn:disabled{opacity:.4}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:var(--r);padding:22px;text-align:center;color:var(--grey)}
+.people{display:grid;gap:10px}
+.person{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;text-align:left;font:inherit;color:inherit;width:100%}
+.person:hover{border-color:var(--ink)}
+.person .nm{font-weight:700;font-size:17px}
+.person .sub{color:var(--grey);font-size:13px}
+.track{display:flex;gap:6px;grid-column:1/-1;margin-top:4px}
+.dot{flex:1;min-width:0;text-align:center;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 0;border:1px solid var(--line);color:var(--grey);border-radius:4px}
+.dot.done{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.dot.today{border-color:var(--ink);color:var(--ink);border-width:2px}
+.dot.late{background:var(--red);border-color:var(--red);color:#fff}
+.dot.skip{background:transparent;border-style:dashed;opacity:.55}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:2px 9px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
+.chip.warn{border-color:var(--red);color:var(--red)}
+.chip.ok{border-color:var(--ink);color:var(--ink)}
+.behind{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.stat b{display:block;font-family:'Anton';font-size:34px;line-height:1}
+.stat b.red{color:var(--red)}
+.stat span{display:block;margin-top:6px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--grey)}
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--bg);z-index:41;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 18px) 18px calc(env(safe-area-inset-bottom,0px) + 40px)}
+.drawer .x{float:right}
+.drawer h2{font-size:34px;margin-top:6px}
+.drawer .facts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:12px}
+.step.done{opacity:.6}
+.step .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.step .st{margin-left:auto;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.step .note{margin-top:8px;font-size:13px;color:var(--grey);white-space:pre-wrap}
+.outcome{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.outcome h3{font-size:20px;margin-bottom:10px}
+textarea,select.inp,input.inp{width:100%;font:inherit;font-size:15px;padding:10px;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:10px;margin-top:8px}
+.fc{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:14px;padding:12px;border:1px dashed var(--line)}
+.fcrow{flex:1 1 160px}.fcrow .inp{margin-top:4px}.fcrow.wide{flex-basis:100%}
+.cnote{margin-top:12px;border:2px solid var(--red);border-radius:10px;padding:10px 12px;background:var(--card)}
+.cnote .label{color:var(--red)}.cnote p{white-space:pre-wrap;margin-top:4px;font-size:15px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;z-index:60}
+.err{background:var(--card);border:1px solid var(--red);border-radius:var(--r);padding:20px;margin-top:30px}
+details.fin summary{cursor:pointer;font-family:'Anton';text-transform:uppercase;font-size:20px;margin-top:30px}
+@media(max-width:520px){.job .meta{margin-left:0;width:100%}}
+</style>
+
+<div class="top"><div class="bar"><img src="data:image/png;base64,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" alt="RTB"><span class="label">21 Day Activation</span><span class="who" id="who"></span></div></div>
+<main id="app"><p class="label" style="margin-top:40px">Loading…</p></main>
+
+<script>
+const API = 'https://lilmmmxgoprrvsnrzppb.supabase.co/functions/v1/activation';
+const DEMO = null;
+const STEP_ORDER = ['d0','d1','d3','d7','d21'];
+const DAYLBL = {d0:'DAY 0',d1:'DAY 1',d3:'DAY 3',d7:'DAY 7',d21:'DAY 21'};
+let S = null, token = null, gymTab = 'all', openId = null, demoAs = null;
+
+const $ = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content; };
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDay = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-AU', {weekday:'short', day:'numeric', month:'short'}) : '';
+const weekday = (d) => d ? new Date(d + 'T00:00:00').toLocaleDateString('en-AU', {weekday:'long'}) : 'your next session';
+const daysBetween = (a, b) => Math.round((new Date(b + 'T00:00:00') - new Date(a + 'T00:00:00')) / 864e5);
+function toast(t){ const el = document.createElement('div'); el.className = 'toast'; el.textContent = t; document.body.append(el); setTimeout(() => el.remove(), 1800); }
+function intlPhone(p){ if(!p) return ''; let d = p.replace(/\D/g,''); if (d.startsWith('0')) d = '61' + d.slice(1); return d; }
+
+// ── data ──
+async function call(body){
+  if (DEMO_MODE) return demoCall(body);
+  const r = await fetch(API, {method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({t: token, ...body})});
+  const j = await r.json().catch(() => ({error:'Network error'}));
+  if (!r.ok || j.error) throw new Error(j.error || 'Something went wrong');
+  return j;
+}
+const step = (k) => S.steps.find(s => s.key === k);
+const staffName = (id) => (S.staff.find(s => s.id === id) || {}).name || '';
+const jobsOf = (mid) => S.jobs.filter(j => j.member_id === mid);
+const jobOf = (mid, k) => S.jobs.find(j => j.member_id === mid && j.step === k);
+const dayOfTrial = (m) => (m.first_class || m.start_date) ? daysBetween(m.first_class || m.start_date, S.today) + 1 : null;
+function stateOf(j){
+  if (!j) return 'none';
+  if (j.result === 'done') return 'done';
+  if (j.result === 'skipped') return 'skip';
+  if (j.due_date < S.today) return 'late';
+  if (j.due_date === S.today) return 'today';
+  return 'upcoming';
+}
+// Mirrors owners() in the edge function
+function ownersOf(m, k){
+  const who = step(k).who, staff = S.staff;
+  if (who === 'onboard') return staff.filter(p => p.onboards);
+  if (who === 'coach') { const c = staff.find(p => p.id === m.coach_id); return c ? [c] : staff.filter(p => p.onboards); }
+  const f = staff.filter(p => p.followup_gym === m.gym);
+  return f.length ? f : staff.filter(p => p.role === 'owner');
+}
+const iOwn = (m, k) => ownersOf(m, k).some(p => p.id === S.me.id);
+const canPickCoach = () => S.me.onboards || S.me.role === 'owner';
+const coachesFor = (m) => S.staff.filter(p => p.role === 'coach' && (p.gym === m.gym || p.gym === 'both'));
+const coachNote = (m) => `<div class="cnote"><p class="label">Notes from onboarding</p><p>${esc(m.coach_note)}</p></div>`;
+function firstClassForm(m){
+  const f = $(`<div class="fc"><div class="fcrow"><label class="label" for="fd_${m.id}">First class</label><input class="inp" type="date" id="fd_${m.id}" value="${m.first_class || m.next_booking || m.start_date || ''}"></div>
+    <div class="fcrow"><label class="label" for="fc_${m.id}">Coach of that class</label><select class="inp" id="fc_${m.id}"><option value="">Pick the coach</option>${coachesFor(m).map(c => `<option value="${c.id}" ${c.id === m.coach_id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div>
+    <div class="fcrow wide"><label class="label" for="fn_${m.id}">Notes for the coach (goal, injuries, nerves, anything they should know)</label><textarea class="inp" id="fn_${m.id}" rows="2" placeholder="e.g. Goal: lose 8kg for a wedding. Sore left knee, go easy on deep squats.">${esc(m.coach_note || '')}</textarea></div>
+    <button class="btn solid">${m.coach_id ? 'Update and tell coach' : 'Save and tell coach'}</button></div>`);
+  f.querySelector('button').onclick = async (e) => {
+    const coach = document.getElementById('fc_' + m.id).value, date = document.getElementById('fd_' + m.id).value, note = document.getElementById('fn_' + m.id).value.trim();
+    if (!coach) return toast('Pick the coach first');
+    e.target.disabled = true;
+    await run(() => call({action: 'first_class', member_id: m.id, coach_id: coach, date, note}), 'Saved');
+  };
+  return f;
+}
+function myJobs(){
+  const out = [];
+  for (const m of S.members) {
+    if (m.outcome || !m.in_latest_sync) continue;
+    if (gymTab !== 'all' && m.gym !== gymTab) continue;
+    for (const j of jobsOf(m.id)) {
+      const st = stateOf(j);
+      if ((st === 'today' || st === 'late') && iOwn(m, j.step)) out.push({m, j, st});
+    }
+  }
+  return out.sort((a, b) => a.j.due_date.localeCompare(b.j.due_date) || STEP_ORDER.indexOf(a.j.step) - STEP_ORDER.indexOf(b.j.step));
+}
+function fill(script, m){
+  return script.replaceAll('{first}', m.first_name).replaceAll('{me}', S.me.name.split(' ')[0]).replaceAll('{next}', m.next_booking && m.next_booking >= S.today ? weekday(m.next_booking) : 'at your next session');
+}
+
+// ── render ──
+function render(){
+  const app = document.getElementById('app'); app.innerHTML = '';
+  const me = S.me, owner = me.role === 'owner';
+  document.getElementById('who').innerHTML = DEMO_MODE
+    ? `<select id="as">${DEMO.staff.map(s => `<option value="${s.id}" ${s.id === me.id ? 'selected' : ''}>Viewing as ${esc(s.name)}</option>`).join('')}</select>`
+    : esc(me.name);
+  if (DEMO_MODE) document.getElementById('as').onchange = (e) => { demoAs = e.target.value; load(); };
+
+  const jobs = myJobs(), late = jobs.filter(x => x.st === 'late').length;
+  app.append($(`<div class="hello"><p class="label"><span class="kick"></span>Your list</p><h1>${jobs.length ? `<em>${jobs.length}</em> job${jobs.length > 1 ? 's' : ''} today` : 'All <em>done</em>'}</h1>
+    <p>Hi ${esc(me.name.split(' ')[0])}. ${late ? `<b style="color:var(--red)">${late} overdue.</b> ` : ''}${fmtDay(S.today)}.</p></div>`));
+  if (owner || me.onboards) app.append($(`<div class="tabs">${[['all','Both gyms'],['windsor','Windsor'],['chelsea','Chelsea']].map(([k,l]) => `<button class="tab ${gymTab === k ? 'on' : ''}" data-g="${k}">${l}</button>`).join('')}</div>`));
+  app.querySelectorAll('.tab').forEach(b => b.onclick = () => { gymTab = b.dataset.g; render(); });
+
+  // today
+  const sec = $(`<section><h2>Today <span class="n">${jobs.length}</span></h2><div id="jobs"></div></section>`);
+  const box = sec.querySelector('#jobs');
+  if (!jobs.length) box.append($(`<div class="empty">Nothing due. Go sell a membership in class.</div>`));
+  for (const {m, j, st} of jobs) box.append(jobCard(m, j, st));
+  app.append(sec);
+
+  // onboarder: first class not set yet. Owner: who is behind
+  const vis = S.members.filter(m => m.in_latest_sync && !m.outcome && (gymTab === 'all' || m.gym === gymTab));
+  if (canPickCoach()) {
+    const noCoach = vis.filter(m => !m.coach_id);
+    if (noCoach.length) {
+      const s2 = $(`<section><h2>First class not set <span class="n">${noCoach.length}</span></h2><div class="people"></div></section>`);
+      noCoach.forEach(m => s2.querySelector('.people').append(personRow(m)));
+      app.append(s2);
+    }
+  }
+  if (owner) {
+    const counts = S.staff.filter(p => p.id !== me.id).map(p => {
+      let n = 0;
+      for (const m of vis) for (const j of jobsOf(m.id)) if (stateOf(j) === 'late' && ownersOf(m, j.step).some(o => o.id === p.id)) n++;
+      return {p, n};
+    });
+    app.append($(`<section><h2>Overdue by person</h2><div class="behind">${counts.map(({p, n}) => `<div class="stat"><b class="${n ? 'red' : ''}">${n}</b><span>${esc(p.name)}</span></div>`).join('')}</div></section>`));
+  }
+
+  // people on the Reset
+  const mineFirst = (m) => STEP_ORDER.some(k => iOwn(m, k) && ['today','late'].includes(stateOf(jobOf(m.id, k)))) ? 0 : 1;
+  const active = S.members.filter(m => m.in_latest_sync && !m.outcome && (gymTab === 'all' || m.gym === gymTab))
+    .sort((a, b) => mineFirst(a) - mineFirst(b) || (a.start_date || '').localeCompare(b.start_date || ''));
+  const s3 = $(`<section><h2>On the Reset <span class="n">${active.length}</span></h2><div class="people"></div></section>`);
+  if (!active.length) s3.querySelector('.people').append($(`<div class="empty">Nobody on the Reset right now.</div>`));
+  active.forEach(m => s3.querySelector('.people').append(personRow(m)));
+  app.append(s3);
+
+  const fin = S.members.filter(m => m.outcome && (gymTab === 'all' || m.gym === gymTab));
+  if (fin.length) {
+    const joined = fin.filter(m => m.outcome === 'joined').length;
+    const d = $(`<details class="fin"><summary>Finished: ${joined} joined, ${fin.length - joined} didn't</summary><div class="people" style="margin-top:12px"></div></details>`);
+    fin.forEach(m => d.querySelector('.people').append(personRow(m)));
+    app.append(d);
+  }
+  if (openId) openDrawer(openId);
+}
+
+function jobCard(m, j, st){
+  const sp = step(j.step), lateBy = daysBetween(j.due_date, S.today);
+  const el = $(`<div class="job ${st === 'late' ? 'late' : ''}">
+    <div class="head"><span class="daypill">${DAYLBL[j.step]}</span><span class="name">${esc(m.first_name)} ${esc(m.last_name)}</span>
+      ${st === 'late' ? `<span class="late-tag">${lateBy} day${lateBy > 1 ? 's' : ''} late</span>` : ''}
+      <span class="meta">${m.gym === 'windsor' ? 'Windsor' : 'Chelsea'}${m.coach_id ? ' · first class with ' + esc(staffName(m.coach_id)) : ''}</span></div>
+    <h3>${esc(sp.title)}</h3><p class="what">${esc(sp.what)}</p>
+    ${m.coach_note && j.step !== 'd0' ? coachNote(m) : ''}
+    ${j.step === 'd0' ? `<p class="what"><b style="color:var(--ink)">Booked so far: ${m.sessions_booked + m.sessions_done}</b> of 3${m.phone ? ' · ' + esc(m.phone) : ''}</p>` : ''}
+    ${sp.script ? `<div class="script">${esc(fill(sp.script, m))}</div>` : ''}
+    ${j.note ? `<p class="what">${esc(j.note)}</p>` : ''}
+    <div class="acts"></div></div>`);
+  if (j.step === 'd0' && canPickCoach()) el.querySelector('.acts').before(firstClassForm(m));
+  el.querySelector('.acts').append(actions(m, j, sp));
+  el.querySelector('.name').style.cursor = 'pointer';
+  el.querySelector('.name').onclick = () => openDrawer(m.id);
+  return el;
+}
+
+function actions(m, j, sp){
+  const f = document.createDocumentFragment(), ph = intlPhone(m.phone);
+  if (ph && sp.channel === 'whatsapp') f.append($(`<a class="btn" href="https://wa.me/${ph}?text=${encodeURIComponent(fill(sp.script, m))}" target="_blank" rel="noopener">WhatsApp</a>`));
+  if (ph && sp.channel.includes('call')) f.append($(`<a class="btn" href="tel:+${ph}">Call ${esc(m.phone)}</a>`));
+  if (sp.script) { const c = $(`<button class="btn ghost">Copy</button>`); c.firstChild.onclick = () => navigator.clipboard?.writeText(fill(sp.script, m)).then(() => toast('Copied')); f.append(c); }
+  if (!ph && sp.channel !== 'in person') f.append($(`<span class="chip warn">No phone in Hapana</span>`));
+  const d = $(`<button class="btn solid">Done</button>`); d.firstChild.onclick = (e) => doJob(e.target, m.id, j.step, 'done'); f.append(d);
+  if (sp.channel === 'call' || sp.channel === 'whatsapp') { const n = $(`<button class="btn ghost">No answer</button>`); n.firstChild.onclick = (e) => doJob(e.target, m.id, j.step, 'no_answer'); f.append(n); }
+  return f;
+}
+
+function personRow(m){
+  const day = dayOfTrial(m);
+  const el = $(`<button class="person"><div><div class="nm">${esc(m.first_name)} ${esc(m.last_name)}</div>
+    <div class="sub">${m.gym === 'windsor' ? 'Windsor' : 'Chelsea'} · ${m.coach_id ? 'first class ' + fmtDay(m.first_class || m.start_date) + ' with ' + esc(staffName(m.coach_id)) : '<span style="color:var(--red)">first class not set</span>'} · ${day === null ? '' : day < 1 ? 'starts ' + fmtDay(m.first_class || m.start_date) : day > 21 ? 'trial ended' : 'day ' + day + ' of 21'}</div></div>
+    <div>${m.outcome === 'joined' ? '<span class="chip ok">Joined</span>' : m.outcome === 'not_joined' ? '<span class="chip">Didn\'t join</span>' : `<span class="chip">${m.sessions_done} done · ${m.sessions_booked} booked</span>`}</div>
+    <div class="track">${STEP_ORDER.map(k => `<span class="dot ${stateOf(jobOf(m.id, k))}">${DAYLBL[k].replace('DAY ', 'D')}</span>`).join('')}</div></button>`);
+  el.firstChild.onclick = () => openDrawer(m.id);
+  return el;
+}
+
+function openDrawer(id){
+  openId = id;
+  document.querySelectorAll('.scrim,.drawer').forEach(e => e.remove());
+  const m = S.members.find(x => x.id === id); if (!m) { openId = null; return; }
+  const day = dayOfTrial(m);
+  const d = $(`<div class="scrim"></div><aside class="drawer" role="dialog" aria-label="Member">
+    <button class="btn ghost x">Close</button>
+    <p class="label">${m.gym === 'windsor' ? 'Windsor' : 'Chelsea Heights'}${day !== null ? ' · ' + (day < 1 ? 'starts ' + fmtDay(m.start_date) : day > 21 ? 'trial ended' : 'day ' + day + ' of 21') : ''}</p>
+    <h2>${esc(m.first_name)} ${esc(m.last_name)}</h2>
+    <div class="facts">${m.phone ? `<a class="btn" href="tel:${esc(m.phone)}">${esc(m.phone)}</a>` : '<span class="chip warn">No phone in Hapana</span>'}
+      <span class="chip">${m.sessions_done} done</span><span class="chip">${m.sessions_booked} booked</span>
+      ${m.next_booking ? `<span class="chip">Next: ${fmtDay(m.next_booking)}</span>` : '<span class="chip warn">Nothing booked</span>'}</div>
+    <div id="fcbox">${canPickCoach() ? '' : `<p class="label" style="margin-top:14px">First class: ${m.coach_id ? fmtDay(m.first_class || m.start_date) + ' with ' + esc(staffName(m.coach_id)) : 'not set yet'}</p>${m.coach_note ? coachNote(m) : ''}`}</div>
+    <div id="steps"></div>
+    <div class="outcome"><h3>${m.outcome ? (m.outcome === 'joined' ? 'Joined' : "Didn't join") : 'Did they join?'}</h3>
+      <p class="what" style="color:var(--grey);font-size:14px">Sold in class on any day? Mark it here and the rest of the sequence stops.</p>
+      <textarea id="onote" rows="2" placeholder="Note (which membership, or why not)">${esc(m.outcome_note || '')}</textarea>
+      <div class="acts">${m.outcome ? `<button class="btn ghost" data-o="">Undo</button>` : `<button class="btn solid" data-o="joined">Joined</button><button class="btn" data-o="not_joined">Didn't join</button>`}</div></div>
+  </aside>`);
+  const steps = d.querySelector('#steps');
+  for (const k of STEP_ORDER) {
+    const j = jobOf(m.id, k); if (!j) continue;
+    const sp = step(k), st = stateOf(j);
+    const lbl = {done: 'Done' + (j.done_by ? ' · ' + staffName(j.done_by) : ''), skip: j.note || 'Skipped', late: 'Overdue', today: 'Due today', upcoming: fmtDay(j.due_date)}[st];
+    const box = $(`<div class="step ${st === 'done' || st === 'skip' ? 'done' : ''}"><div class="row"><span class="daypill" style="${st === 'late' ? 'background:var(--red);color:#fff' : ''}">${DAYLBL[k]}</span><b>${esc(sp.title)}</b><span class="st" style="${st === 'late' ? 'color:var(--red)' : ''}">${esc(lbl)}</span></div>
+      <p class="what" style="color:var(--grey);font-size:14px;margin-top:6px">${esc(sp.what)}</p>
+      ${sp.script && st !== 'done' && st !== 'skip' ? `<div class="script">${esc(fill(sp.script, m))}</div>` : ''}
+      ${j.note && st !== 'skip' ? `<p class="note">${esc(j.note)}</p>` : ''}<div class="acts"></div></div>`);
+    if (st === 'done') { const u = $(`<button class="btn ghost">Undo</button>`); u.firstChild.onclick = (e) => doJob(e.target, m.id, k, 'undo'); box.querySelector('.acts').append(u); }
+    else if (st !== 'skip' && !m.outcome) box.querySelector('.acts').append(actions(m, j, sp));
+    steps.append(box);
+  }
+  document.body.append(d);
+  const close = () => { openId = null; document.querySelectorAll('.scrim,.drawer').forEach(e => e.remove()); };
+  document.querySelector('.scrim').onclick = close;
+  document.querySelector('.drawer .x').onclick = close;
+  if (canPickCoach()) document.getElementById('fcbox').append(firstClassForm(m));
+  document.querySelectorAll('.outcome [data-o]').forEach(b => b.onclick = async () => {
+    await run(() => call({action: 'outcome', member_id: m.id, outcome: b.dataset.o || null, note: document.getElementById('onote').value}), b.dataset.o === 'joined' ? 'Nice work' : 'Saved');
+  });
+}
+
+async function doJob(btn, mid, k, result){
+  btn.disabled = true;
+  await run(() => call({action: 'job', member_id: mid, step: k, result}), result === 'done' ? 'Done' : result === 'no_answer' ? 'Back on tomorrow' : 'Undone');
+}
+async function run(fn, msg){
+  try { S = await fn(); toast(S.flash || msg); render(); }
+  catch (e) { toast(e.message); render(); }
+}
+
+// ── demo (preview only: made-up people) ──
+function demoCall(b){
+  const as = DEMO.staff.find(s => s.id === (demoAs || 'josh'));
+  const st = DEMO.state;
+  if (b.action === 'job') {
+    const j = st.jobs.find(x => x.member_id === b.member_id && x.step === b.step);
+    if (b.result === 'done') Object.assign(j, {result: 'done', done_at: new Date().toISOString(), done_by: as.id});
+    if (b.result === 'undo') Object.assign(j, {result: null, done_at: null, done_by: null});
+    if (b.result === 'no_answer') { const t = new Date(DEMO.today + 'T00:00:00'); do t.setDate(t.getDate() + 1); while (t.getDay() === 0 || t.getDay() === 6); j.due_date = t.toLocaleDateString('en-CA'); j.note = 'No answer ' + DEMO.today; }
+  }
+  let flash = '';
+  if (b.action === 'first_class') {
+    const m = st.members.find(x => x.id === b.member_id), coach = DEMO.staff.find(x => x.id === b.coach_id);
+    m.coach_id = b.coach_id; m.coach_note = b.note || null; if (b.date) m.first_class = b.date;
+    for (const j of st.jobs.filter(x => x.member_id === m.id && !x.result)) {
+      const d = DEMO.steps.find(x => x.key === j.step).day;
+      if (d > 1) { const t = new Date(m.first_class + 'T00:00:00'); t.setDate(t.getDate() + d - 1); if (t.getDay() === 6) t.setDate(t.getDate() - 1); if (t.getDay() === 0) t.setDate(t.getDate() + 1); j.due_date = t.toLocaleDateString('en-CA'); }
+      else if (d === 1) j.due_date = m.first_class;
+      else Object.assign(j, {result: 'done', done_at: new Date().toISOString(), done_by: as.id});
+    }
+    flash = coach.name + ' told by WhatsApp + email (preview: nothing sent)';
+  }
+  if (b.action === 'outcome') {
+    const m = st.members.find(x => x.id === b.member_id); m.outcome = b.outcome; m.outcome_note = b.note;
+    st.jobs.filter(x => x.member_id === m.id && !x.result).forEach(x => { if (b.outcome) { x.result = 'skipped'; x.note = b.outcome === 'joined' ? 'Joined' : "Didn't join"; } });
+    if (!b.outcome) st.jobs.filter(x => x.member_id === m.id && x.result === 'skipped' && /join/i.test(x.note || '')).forEach(x => { x.result = null; x.note = null; });
+  }
+  const members = st.members.filter(m => as.role === 'owner' || as.onboards || as.followup_gym === m.gym || m.coach_id === as.id);
+  return Promise.resolve({me: as, today: DEMO.today, steps: DEMO.steps, staff: DEMO.staff, members, jobs: st.jobs, flash});
+}
+
+const DEMO_MODE = !!DEMO;
+async function load(){
+  try {
+    if (!DEMO_MODE) {
+      const h = new URLSearchParams(location.hash.slice(1));
+      token = h.get('t') || (() => { try { return localStorage.getItem('rtb_act_t'); } catch { return null; } })();
+      if (h.get('t')) { try { localStorage.setItem('rtb_act_t', token); } catch {} history.replaceState(null, '', location.pathname); }
+      if (!token) throw new Error('Open this page from the link in your RTB reminder.');
+    }
+    S = await call({action: 'board'});
+    render();
+  } catch (e) {
+    document.getElementById('app').innerHTML = `<div class="err"><h2 style="font-size:26px">Can't open the board</h2><p style="margin-top:8px">${esc(e.message)}</p></div>`;
+  }
+}
+load();
+</script>
