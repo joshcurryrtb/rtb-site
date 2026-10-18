@@ -193,7 +193,7 @@ function render(){
   // onboarder: first class not set yet. Owner: who is behind
   const vis = S.members.filter(m => m.in_latest_sync && !m.outcome && (gymTab === 'all' || m.gym === gymTab));
   if (canPickCoach()) {
-    const noCoach = vis.filter(m => !m.coach_id);
+    const noCoach = vis.filter(m => !m.coach_id && !m.sessions_done && !m.outcome);
     if (noCoach.length) {
       const s2 = $(`<section><h2>First class not set <span class="n">${noCoach.length}</span></h2><div class="people"></div></section>`);
       noCoach.forEach(m => s2.querySelector('.people').append(personRow(m)));
@@ -261,7 +261,7 @@ function actions(m, j, sp){
 function personRow(m){
   const day = dayOfTrial(m);
   const el = $(`<button class="person"><div><div class="nm">${esc(m.first_name)} ${esc(m.last_name)}</div>
-    <div class="sub">${m.gym === 'windsor' ? 'Windsor' : 'Chelsea'} · ${m.coach_id ? 'first class ' + fmtDay(m.first_class || m.start_date) + ' with ' + esc(staffName(m.coach_id)) : '<span style="color:var(--red)">first class not set</span>'} · ${day === null ? '' : day < 1 ? 'starts ' + fmtDay(m.first_class || m.start_date) : day > 21 ? 'trial ended' : 'day ' + day + ' of 21'}</div></div>
+    <div class="sub">${m.gym === 'windsor' ? 'Windsor' : 'Chelsea'} · ${m.coach_id ? 'first class ' + fmtDay(m.first_class || m.start_date) + ' with ' + esc(staffName(m.coach_id)) : m.sessions_done ? 'already training' : '<span style="color:var(--red)">first class not set</span>'} · ${day === null ? '' : day < 1 ? 'starts ' + fmtDay(m.first_class || m.start_date) : day > 21 ? 'trial ended' : 'day ' + day + ' of 21'}</div></div>
     <div>${m.outcome === 'joined' ? '<span class="chip ok">Joined</span>' : m.outcome === 'not_joined' ? '<span class="chip">Didn\'t join</span>' : `<span class="chip">${m.sessions_done} done · ${m.sessions_booked} booked</span>`}</div>
     <div class="track">${STEP_ORDER.map(k => `<span class="dot ${stateOf(jobOf(m.id, k))}">${DAYLBL[k].replace('DAY ', 'D')}</span>`).join('')}</div></button>`);
   el.firstChild.onclick = () => openDrawer(m.id);
@@ -280,7 +280,7 @@ function openDrawer(id){
     <div class="facts">${m.phone ? `<a class="btn" href="tel:${esc(m.phone)}">${esc(m.phone)}</a>` : '<span class="chip warn">No phone in Hapana</span>'}
       <span class="chip">${m.sessions_done} done</span><span class="chip">${m.sessions_booked} booked</span>
       ${m.next_booking ? `<span class="chip">Next: ${fmtDay(m.next_booking)}</span>` : '<span class="chip warn">Nothing booked</span>'}</div>
-    <div id="fcbox">${canPickCoach() ? '' : `<p class="label" style="margin-top:14px">First class: ${m.coach_id ? fmtDay(m.first_class || m.start_date) + ' with ' + esc(staffName(m.coach_id)) : 'not set yet'}</p>${m.coach_note ? coachNote(m) : ''}`}</div>
+    <div id="fcbox">${canPickCoach() ? '' : `<p class="label" style="margin-top:14px">First class: ${m.coach_id ? fmtDay(m.first_class || m.start_date) + ' with ' + esc(staffName(m.coach_id)) : m.sessions_done ? 'already done' : 'not set yet'}</p>${m.coach_note ? coachNote(m) : ''}`}</div>
     <div id="steps"></div>
     <div class="outcome"><h3>${m.outcome ? (m.outcome === 'joined' ? 'Joined' : "Didn't join") : 'Did they join?'}</h3>
       <p class="what" style="color:var(--grey);font-size:14px">Sold in class on any day? Mark it here and the rest of the sequence stops.</p>
