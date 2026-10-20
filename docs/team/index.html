@@ -145,7 +145,7 @@ function firstClassForm(m){
     <div class="fcrow wide"><label class="label" for="fn_${m.id}">Notes for the coach (goal, injuries, nerves, anything they should know)</label><textarea class="inp" id="fn_${m.id}" rows="2" placeholder="e.g. Goal: lose 8kg for a wedding. Sore left knee, go easy on deep squats.">${esc(m.coach_note || '')}</textarea></div>
     <button class="btn solid">${m.coach_id ? 'Update and tell coach' : 'Save and tell coach'}</button></div>`);
   f.querySelector('button').onclick = async (e) => {
-    const coach = document.getElementById('fc_' + m.id).value, date = document.getElementById('fd_' + m.id).value, note = document.getElementById('fn_' + m.id).value.trim();
+    const coach = f.querySelector('select').value, date = f.querySelector('input[type=date]').value, note = f.querySelector('textarea').value.trim();
     if (!coach) return toast('Pick the coach first');
     e.target.disabled = true;
     await run(() => call({action: 'first_class', member_id: m.id, coach_id: coach, date, note}), 'Saved');
