@@ -143,7 +143,7 @@ function firstClassForm(m){
   const f = $(`<div class="fc"><div class="fcrow"><label class="label" for="fd_${m.id}">First class</label><input class="inp" type="date" id="fd_${m.id}" value="${m.first_class || m.next_booking || m.start_date || ''}"></div>
     <div class="fcrow"><label class="label" for="fc_${m.id}">Coach of that class</label><select class="inp" id="fc_${m.id}"><option value="">Pick the coach</option>${coachesFor(m).map(c => `<option value="${c.id}" ${c.id === m.coach_id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div>
     <div class="fcrow wide"><label class="label" for="fn_${m.id}">Notes for the coach (goal, injuries, nerves, anything they should know)</label><textarea class="inp" id="fn_${m.id}" rows="2" placeholder="e.g. Goal: lose 8kg for a wedding. Sore left knee, go easy on deep squats.">${esc(m.coach_note || '')}</textarea></div>
-    <button class="btn solid">${m.coach_id ? 'Update and tell coach' : 'Save and tell coach'}</button></div>`);
+    <button class="btn solid">${m.coach_id ? 'Update and tell coach' : 'Save and tell coach'}</button></div>`).firstElementChild;
   f.querySelector('button').onclick = async (e) => {
     const coach = f.querySelector('select').value, date = f.querySelector('input[type=date]').value, note = f.querySelector('textarea').value.trim();
     if (!coach) return toast('Pick the coach first');
