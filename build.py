@@ -28,6 +28,7 @@ for page,body in sources:
         if page.startswith('reset-') or page.startswith('experience-'):  # gym specific ad pages (22 Oct 2026): ad only, every CTA stays on the page
             out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
             out=out.replace('href="apply.html#apply"','href="#book"').replace('href="apply.html"','href="#book"')
+            if page.startswith('experience-'): out=out.replace('>Book a free call</a>','>Claim your free pass</a>')  # free pass page, no call
         f0,f1=out.index('<footer>'),out.index('</footer>')+9
         ft=out[f0:f1]
         ft=re.sub(r'\s*<div>\s*<h4>Start here</h4>.*?</div>','',ft,flags=re.S)
