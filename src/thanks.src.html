@@ -38,6 +38,7 @@ if(ap&&!(ap.sid&&ap.f_lead&&now-ap.t<30*864e5))ap=null;
 if(window.fbq){if(src==='call'&&ap){if(!ap.f_sch){ap.f_sch=1;try{localStorage.setItem('rtb_apply',JSON.stringify(ap))}catch(e){}
 fbq('track','Schedule',{content_name:'RTB call',segment:(ap.gym==='windsor'?'win':'ch')+'-'+({women:'f',men:'m',all:'a'})[ap.page],gym:ap.gym,concept:ap.concept||''},{eventID:'ap_'+ap.sid+'_sch'});}}
 else if(src==='call'){fbq('track','Lead',{content_name:'RTB call',value:0,currency:'AUD'},{eventID:id+'_l'});fbq('track','Schedule',{content_name:'RTB call'},{eventID:id+'_s'});}
+else if(src==='experience'){fbq('track','Lead',{content_name:'Free RTB Experience',value:0,currency:'AUD'},{eventID:id+'_l'});fbq('track','Schedule',{content_name:'Free RTB Experience'},{eventID:id+'_s'});}
 else fbq('trackCustom','OtherBooking',{content_name:'RTB '+src},{eventID:id+'_o'});}
 if(window.gtag){gtag('event',src==='call'?'generate_lead':'other_booking',{event_label:src});}})();
 </script>

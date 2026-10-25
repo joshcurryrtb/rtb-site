@@ -16,7 +16,7 @@ for page,body in sources:
     m=re.search(r'<!--\s*title:(.*?)\|desc:(.*?)-->',body,re.S)
     title=m.group(1).strip() if m else 'RTB Gym'; desc=m.group(2).strip() if m else ''
     out=head.replace('__TITLE__',title).replace('__DESC__',desc).replace('__PAGE__',page)+body+foot
-    if page=='reset' or page in APPLY or page.startswith('reset-'):  # ad landing page: no way off the page except booking
+    if page=='reset' or page in APPLY or page.startswith('reset-') or page.startswith('experience-'):  # ad landing page: no way off the page except booking
         out=re.sub(r'<a href="index.html">(<img class="logo"[^>]*>)</a>',r'\1',out)
         out=re.sub(r'\s*<button class="burger".*?</button>','',out,flags=re.S)
         out=re.sub(r'\s*<div class="links">.*?</div>','',out,count=1,flags=re.S)
@@ -25,7 +25,7 @@ for page,body in sources:
             out=out.replace('href="apply.html#apply"','href="#apply"').replace('href="apply.html"','href="#apply"')
             if page!='apply': out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
         out=out.replace('href="reset.html#book"','href="#book"')
-        if page.startswith('reset-'):  # gym specific booking pages (22 Oct 2026): ad only, every CTA stays on the page
+        if page.startswith('reset-') or page.startswith('experience-'):  # gym specific ad pages (22 Oct 2026): ad only, every CTA stays on the page
             out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
             out=out.replace('href="apply.html#apply"','href="#book"').replace('href="apply.html"','href="#book"')
         f0,f1=out.index('<footer>'),out.index('</footer>')+9
