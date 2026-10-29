@@ -12,6 +12,7 @@
 .q{font-family:'Anton',sans-serif;text-transform:uppercase;font-size:clamp(28px,4.4vw,42px);line-height:1.02;margin:10px 0 6px;font-weight:400}
 .qsub{font:400 16px/1.5 'Epilogue',sans-serif;color:var(--grey);margin:0 0 20px}
 .opts{display:grid;gap:10px}
+.heroq{margin-top:28px;max-width:520px}.heroq .hq{font:700 19px/1.3 'Epilogue',sans-serif;margin:0 0 12px}.heroq .opt{background:#fff;font-weight:600}
 .opt{text-align:left;background:#F5F5F5;border:1px solid var(--line);padding:16px 18px;font:500 17px 'Epilogue',sans-serif;cursor:pointer;border-radius:10px;transition:all .12s}
 .opt:hover{border-color:#000}
 .opt.on{background:#000;color:#fff;border-color:#000}
@@ -241,7 +242,7 @@ body.locked .nav2{position:sticky;bottom:0;z-index:6;background:#fff;margin:12px
   </div>
 </section>
 
-<section id="apply" class="alt">
+<section id="apply" class="alt" data-clarity-mask="true">
   <div class="wrap">
     <div class="app">
       <div class="prog"><i id="bar"></i></div>
@@ -311,15 +312,16 @@ save();
 const seg=()=>(GYM==='windsor'?'win':'ch')+'-'+({women:'f',men:'m',all:'a'})[G];
 
 function track(ev,key,params){
+ if(window.LAB){LAB.sid=ST.sid;({lead:'contact',sa:'complete'})[key]&&LAB.ev(({lead:'contact',sa:'complete'})[key])}  /* landing page lab funnel */
  if(ST['f_'+key]) return; ST['f_'+key]=1; save();
- const p=Object.assign({segment:seg(),gym:GYM,concept:ST.concept||''},params||{});
+ const p=Object.assign({segment:seg(),gym:GYM,concept:ST.concept||''},window.LAB&&LAB.tag?{lab:LAB.tag}:{},params||{});
  if(!LIVE){console.log('[apply] local preview, not sent to Meta:',ev,p);return}
  if(window.fbq) fbq('track',ev,p,{eventID:'ap_'+ST.sid+'_'+key});
  if(window.gtag) gtag('event','apply_'+key,{segment:seg(),gym:GYM});
 }
 
 /* Quiz started: answered the first question. Custom event so the funnel shows where people drop before the contact step. */
-function started(){if(ST.f_st)return;ST.f_st=1;save();if(!LIVE)return;if(window.fbq)fbq('trackCustom','ApplyStarted',{segment:seg(),gym:GYM,concept:ST.concept||''});if(window.gtag)gtag('event','apply_started',{segment:seg(),gym:GYM})}
+function started(){if(window.LAB){LAB.sid=ST.sid;LAB.ev('form_start')}if(ST.f_st)return;ST.f_st=1;save();if(!LIVE)return;if(window.fbq)fbq('trackCustom','ApplyStarted',{segment:seg(),gym:GYM,concept:ST.concept||''});if(window.gtag)gtag('event','apply_started',{segment:seg(),gym:GYM})}
 
 /* Server calls run in order and retry, so a slow first call can't be overtaken by a later one. */
 let Q=Promise.resolve(), CONTACT=null;
@@ -469,7 +471,7 @@ function render(){
   else{A[s.id]=A[s.id]||[];const k=A[s.id].indexOf(o);k<0?A[s.id].push(o):A[s.id].splice(k,1);b.classList.toggle('on');
    if(k<0){A._cur=o;showReply(s,b)}else if(A._cur===o){const rest=A[s.id];if(rest.length){A._cur=rest[rest.length-1];showReply(s,document.querySelector(`.opt[data-o="${CSS.escape(A._cur)}"]`))}else{A._cur=null;$('#reply').classList.remove('show')}}}
  });
- if(s.type==='multi') $('#go').onclick=()=>{if(!(A[s.id]||[]).length){return}next()};
+ if(s.type==='multi') $('#go').onclick=()=>{if(!(A[s.id]||[]).length){const r=$('#reply');r.innerHTML='<p class="ref">Pick at least one to continue.</p>';r.classList.add('show');return}next()};
 }
 function showReply(s,anchor){
  const qa=s.qaFn?s.qaFn(A):s.qa;
@@ -513,7 +515,9 @@ const FAQ=[["Is this a gym membership?","No. It's a coached program. You get a p
 
 function paint(){
  const seg2=G+'-'+(GYM||'windsor');
- document.querySelectorAll('[data-t]').forEach(el=>{const v=COPY[el.dataset.t];el.innerHTML=v[G]||v[GYM]||v._||''});
+ const LC=(window.LAB&&LAB.copy)||{};  /* landing page lab: a variant's copy wins over COPY */
+ document.querySelectorAll('[data-t]').forEach(el=>{const k=el.dataset.t,v=COPY[k];el.innerHTML=k in LC?LC[k]:(v[G]||v[GYM]||v._||'')});
+ if(!$('.hero-photo')){paintLite();return}  /* classic page (30 Oct 2026) has only the quiz from this template */
  document.querySelector('[data-src="heroImg"]').src=COPY.heroImg[G];
  if(G==='women'){document.querySelector('.hero-photo').classList.add('ba');document.querySelector('[data-t=heroLabel]').textContent='Real RTB member';document.querySelector('[data-t=heroCard]').textContent='Before and after, coached at RTB.'}
  if(G==='men'){document.querySelector('.hero-photo').classList.add('ba');document.querySelector('[data-t=heroLabel]').textContent='Josh Curry, RTB founder';document.querySelector('[data-t=heroCard]').textContent='Before and after, on the same program.'}
@@ -523,9 +527,21 @@ function paint(){
  $('#tt').innerHTML=(GYM?[GYM]:['windsor','chelsea']).map(g=>`<div class="ttg"><h3>${COPY.loc[g]}</h3><p class="ad">${COPY.addr[g]}</p>${ttHTML(g)}</div>`).join('');
  $('#faq').innerHTML=FAQ.map((f,k)=>`<details ${k?'':'open'}><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join('');
 }
+function paintLite(){}
 paint();S=steps();render();
+/* Landing page lab flag q1hero (test AP01, 29 Oct 2026): the leak is before the form, so ask question 1 in the hero. */
+if(window.LAB&&LAB.flags&&LAB.flags.q1hero&&document.querySelector('.hero .ctarow')){
+ const s0=S[0], gym=s0.type==='gym', row=document.querySelector('.hero .ctarow');
+ const opts=gym?['windsor','chelsea'].map(g=>[g,COPY.loc[g]]):s0.opts.map(o=>[o,o]);
+ row.outerHTML=`<div class="heroq"><p class="hq">${s0.q}</p><div class="opts">${opts.map(([v,t])=>`<button class="opt" data-hq="${esc(v)}">${t}</button>`).join('')}</div></div>`;
+ document.querySelectorAll('[data-hq]').forEach(b=>b.onclick=()=>{
+  i=0;render();toStep();
+  const t=document.querySelector(gym?`.gymopt[data-gym="${b.dataset.hq}"]`:`#step .opt[data-o="${CSS.escape(b.dataset.hq)}"]`);
+  if(t) t.click();
+ });
+}
 if(!window._rtbEmbed){window._rtbEmbed=1;const sc=document.createElement('script');sc.src='https://grow-api.hapana.com/js/form_embed.js';document.body.appendChild(sc)}
 /* Hide the sticky bar while the form or the quick booking calendar is on screen. */
-if('IntersectionObserver' in window){const seen=new Set();const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?seen.add(e.target):seen.delete(e.target));document.body.classList.toggle('inapply',seen.size>0)},{threshold:0.05});io.observe($('#apply'));io.observe($('#quickbook'))}
+if('IntersectionObserver' in window){const seen=new Set();const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?seen.add(e.target):seen.delete(e.target));document.body.classList.toggle('inapply',seen.size>0)},{threshold:0.05});io.observe($('#apply'));if($('#quickbook'))io.observe($('#quickbook'))}
 })();
 </script>

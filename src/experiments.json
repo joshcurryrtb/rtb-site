@@ -1,0 +1,109 @@
+{
+  "_readme": "Landing page lab. status: draft (preview only with ?lab=ID:V), live (visitors split), done (winner copied into the page, kept for the record). ONE live test at a time (traffic can't carry two). A is always the current page. copy = keys of COPY on apply pages; html = CSS selector -> new innerHTML; flags = switches the page code reads (LAB.flags). redirect = {from page: to page} for whole page tests. primary = the metric that calls the test. Runbook: ~/rtb-ads/lab/README.md",
+  "experiments": [
+    {
+      "id": "AP01",
+      "name": "Old Squarespace page (with apply quiz) vs apply page",
+      "status": "done",
+      "pages": [
+        "apply-women",
+        "apply-men",
+        "apply",
+        "reset-classic-women",
+        "reset-classic-men",
+        "reset-classic"
+      ],
+      "primary": "booked",
+      "hypothesis": "The Squarespace page booked 2.6% of landing page views (May to Aug) vs 1.7% on the apply pages (Oct). It shows the price, a 6 part offer stack, named results and the booking step in section 3. Rebuilt with the apply quiz before the calendar so non bookers are still captured.",
+      "started": null,
+      "variants": {
+        "A": {
+          "note": "Control: current apply pages"
+        },
+        "B": {
+          "note": "Classic page, same gender quiz"
+        }
+      },
+      "result": "Not tested. Josh launched the classic page on every lead source URL on 30 Oct 2026 (Squarespace history: 2.6% vs 1.7% of LPV booked). apply* and reset-chelsea now serve it; old quiz page at apply-quiz*."
+    },
+    {
+      "id": "AP02",
+      "name": "Question 1 in the hero",
+      "status": "draft",
+      "pages": [
+        "apply-quiz-women",
+        "apply-quiz-men",
+        "apply-quiz"
+      ],
+      "primary": "form_start",
+      "hypothesis": "Only 2.6% of visitors start the form but 88% of starters finish. The leak is the 9,000px jump from the hero button to the quiz. Asking question 1 right in the hero is a smaller first step.",
+      "started": null,
+      "variants": {
+        "A": {
+          "note": "Control: Explore my options button jumps to the form"
+        },
+        "B": {
+          "note": "Question 1 as big buttons under the headline",
+          "flags": {
+            "q1hero": true
+          }
+        }
+      },
+      "note": "Built for the old quiz page (apply-quiz*). Rework for the classic page before running."
+    },
+    {
+      "id": "AP03",
+      "name": "Price on screen one",
+      "status": "draft",
+      "pages": [
+        "apply-quiz-women",
+        "apply-quiz-men",
+        "apply-quiz"
+      ],
+      "primary": "form_start",
+      "hypothesis": "No price anywhere and 34% of applicants say just looking. Showing $150 against $89 a week reassures buyers and filters tyre kickers. Judge on bookings per finished application too.",
+      "started": null,
+      "variants": {
+        "A": {
+          "note": "Control: no price"
+        },
+        "B": {
+          "note": "Price anchor replaces the 15 seconds note",
+          "html": {
+            ".hero .ctanote": "Normally $89 a week. Your first 21 days: <b style=\"color:#000\">$150, all inclusive.</b> Unlimited classes."
+          }
+        }
+      },
+      "note": "Built for the old quiz page (apply-quiz*). Rework for the classic page before running."
+    },
+    {
+      "id": "AP04",
+      "name": "Women headline: skinny fat",
+      "status": "draft",
+      "pages": [
+        "apply-quiz-women"
+      ],
+      "primary": "form_start",
+      "hypothesis": "Women 30+ call themselves skinny fat. Their words beat a generic leaner and stronger promise. Check Meta destination policy before going live.",
+      "started": null,
+      "variants": {
+        "A": {
+          "note": "Control: Leaner. Tighter. Twice as strong. With zero cardio."
+        },
+        "B": {
+          "note": "Josh's skinny fat line (Sep 2026 mockup A)",
+          "copy": {
+            "h1": "Turn <span class=\"hl\">skinny fat</span> into strong and toned.<span class=\"kick\">With zero cardio.</span>"
+          }
+        },
+        "C": {
+          "note": "Research pick: names the failed approach",
+          "copy": {
+            "h1": "Cardio built the habit. <span class=\"hl\">Lifting</span> builds the shape."
+          }
+        }
+      },
+      "note": "Built for the old quiz page (apply-quiz*). Rework for the classic page before running."
+    }
+  ]
+}

@@ -18,7 +18,7 @@
     </div>
   </div>
 </section>
-<script>(function(){var src=(location.search.match(/src=([a-z]+)/)||[])[1]||'unknown';if(src==='call')document.getElementById('callvids').style.display='';})();</script>
+<script>(function(){var src=(location.search.match(/src=([a-z]+)/)||[])[1]||'unknown';if(window.LAB)LAB.ev('booked',{src:src});if(src==='call')document.getElementById('callvids').style.display='';})();</script>
 <script>
 /* One count per booking. This page reloads (refresh, back button, reopened tab) and each load used to fire
    Lead + Schedule again, inflating Ads Manager. Fire once per browser per 12 hours, with an eventID so Meta can

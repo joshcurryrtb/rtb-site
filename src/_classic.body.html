@@ -1,0 +1,173 @@
+<!-- Classic page (30 Oct 2026): rebuild of the Squarespace 21-day-strength page that ran May to Aug 2026
+     (2.6% of landing page views booked a call vs 1.7% on the apply pages). Same sections, copy and images.
+     Changes from the original (Josh 30 Oct): Google reviews instead of the photo gallery, Newie 21 day buy link, Liz guide bonus instead of $100 voucher, guest pass instead of calorie tracker, call with the RTB team. Also: the booking calendar is replaced by the apply quiz (captures leads who don't book,
+     still ends on the calendar), dashes removed, "Starts April 2026" dropped. build.py wraps this with the apply
+     template's styles and script. -->
+<style>
+.c-hero{display:grid;grid-template-columns:1fr 1fr;min-height:min(92vh,860px);background:var(--bg)}
+.c-hero .txt{display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,6vw,96px) clamp(20px,5vw,64px) clamp(40px,6vw,96px) max(clamp(20px,5vw,64px),calc((100vw - 1200px)/2))}
+.c-hero h1{font-size:clamp(46px,6vw,84px);line-height:.95;margin:0}
+.c-hero .intro{font-size:clamp(17px,1.6vw,19px);line-height:1.5;margin:28px 0 0;max-width:30ch}
+.c-hero hr{border:0;border-top:1px solid #000;margin:28px 0 22px;max-width:420px}
+.c-hero .allin{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.c-hero .allin small{display:block;font:500 11px Epilogue,sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.c-hero .allin b{display:block;font:400 clamp(36px,4vw,48px)/1 Anton,sans-serif;text-transform:uppercase;margin:6px 0}
+.c-hero .allin span{font:400 12px Epilogue,sans-serif}
+.c-hero .pic{position:relative;background:url(img/classic/hero.jpg) center/cover}
+.c-hero .tag{position:absolute;left:4%;bottom:3%;background:#fff;padding:14px 32px 12px;min-width:46%}
+.c-hero .tag small{font:500 12px Epilogue,sans-serif;text-transform:uppercase}
+.c-hero .tag b{display:block;font:400 22px Anton,sans-serif;text-transform:uppercase}
+.btn{display:inline-block;background:#000;color:#fff;border-radius:999px;padding:14px 40px;font:500 13px Epilogue,sans-serif;text-transform:uppercase;letter-spacing:.04em;text-decoration:none}
+.btn.light{background:#d9d9d9;color:#000}
+.c-center{text-align:center;max-width:720px;margin:0 auto}
+.c-center h2{font-size:clamp(34px,4.4vw,56px);line-height:1}
+.c-center p{color:var(--grey);font-size:17px;line-height:1.6;margin:20px auto 0;max-width:46ch}
+.c-center p b{color:#555}
+.c-rule{border:0;border-top:1px solid #000;max-width:1000px;margin:0 auto}
+.c-inc .head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;border-bottom:1px solid #000;padding-bottom:22px}
+.c-inc .head h2{font-size:clamp(34px,4.4vw,56px);line-height:1}
+.c-inc .head p{font-size:13px;text-align:right;max-width:32ch}
+.c-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:52px}
+.c-card{background:#fff;border:1px solid var(--line);padding:clamp(24px,3vw,44px);display:grid;grid-template-columns:auto 1fr;gap:24px;min-height:200px}
+.c-card .n{font:400 clamp(34px,3.4vw,46px)/1 Anton,sans-serif;color:#777}
+.c-card h3{font:700 16px Epilogue,sans-serif;text-transform:none;margin:4px 0 10px}
+.c-card p{font-size:15px;line-height:1.55;color:var(--grey);margin:0}
+.c-card p b{color:#333}
+.c-bonus{margin-top:8px;background:#000;color:#fff;padding:clamp(24px,3vw,40px);display:flex;justify-content:space-between;align-items:center;gap:24px}
+.c-bonus p{margin:0;font-size:16px;line-height:1.5;color:#ddd;max-width:56ch}.c-bonus p b{color:#fff}
+.c-bonus span{font:400 clamp(48px,6vw,72px)/1 Anton,sans-serif;color:var(--red)}
+.c-book{background:#000;padding-block:28px clamp(48px,6vw,80px)}
+.c-book .skip{text-align:center;margin-bottom:24px}
+.c-book .app{margin-top:0}
+.c-book #apply{background:transparent;border:0;padding:0}
+.c-proof .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:48px}
+.c-res{background:#fff;border:1px solid var(--line);padding:24px;display:flex;flex-direction:column}
+.c-res img{width:100%;height:auto;display:block}
+.c-res .nums{display:grid;grid-template-columns:1fr 1fr;text-align:center;margin:24px 0 18px;padding-bottom:20px;border-bottom:1px solid #000}
+.c-res .nums b{display:block;font:400 30px Anton,sans-serif}
+.c-res .nums span{font-size:12px;color:var(--grey)}
+.c-res q{font-size:14px;line-height:1.55;color:var(--grey);quotes:none;flex:1}
+.c-res cite{display:block;font:600 13px Epilogue,sans-serif;font-style:normal;margin-top:16px}
+.c-more{text-align:center;margin-top:44px}
+.c-nopressure{border-top:1px solid #000;padding-block:36px}
+.c-nopressure h4{font:400 clamp(26px,3vw,34px) Anton,sans-serif;text-transform:uppercase;margin:0}
+.c-nopressure p{font-size:14px;margin:10px 0 18px}
+.c-nopressure ul{display:flex;flex-wrap:wrap;gap:10px 48px;list-style:none;padding:0;margin:0;font:600 14px Epilogue,sans-serif}
+.c-final{background:#000;color:#fff}
+.c-final .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,80px);align-items:start}
+.c-final h3{font:400 clamp(40px,5vw,64px)/1 Anton,sans-serif;text-transform:uppercase;color:#fff;margin:8px 0 0}
+.c-final .lbl{font:500 12px Epilogue,sans-serif;text-transform:uppercase;color:#bbb}
+.c-final p{color:#ccc;font-size:16px;line-height:1.6;margin-top:24px}.c-final p b{color:#fff}
+.c-final dl{margin:28px 0 0;display:grid;grid-template-columns:auto 1fr;gap:12px 28px;font-size:16px}
+.c-final dt{color:#999}.c-final dd{margin:0;color:#fff;font-weight:600}
+.c-final .go{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.c-final .go .btn{background:#fff;color:#000;font-size:15px;padding:20px 44px}
+.c-final .go .btn.light{background:#333;color:#fff}
+@media (max-width:860px){
+ .c-hero{grid-template-columns:1fr;min-height:0}
+ .c-hero .txt{padding:36px 20px 32px}
+ .c-hero .pic{min-height:62vw}
+ .c-grid,.c-proof .cards,.c-final .grid{grid-template-columns:1fr}
+ .c-inc .head{flex-direction:column;align-items:flex-start}.c-inc .head p{text-align:left}
+ .c-bonus{flex-direction:column;align-items:flex-start}
+}
+</style>
+
+<section class="c-hero" style="padding:0">
+  <div class="txt">
+    <h1>The RTB 21 Day Strength Reset</h1>
+    <p class="intro">Most people don't have a training problem. <b>They have a direction problem.</b><br><br>In 21 days, you'll know exactly where your body is, where it's going, and how to get it there.</p>
+    <hr>
+    <div class="allin">
+      <div><small>All in for</small><b>21 days</b><span>Windsor &amp; Chelsea Heights</span></div>
+      <a class="btn" href="#apply" data-cta="hero">Book a free call →</a>
+    </div>
+  </div>
+  <div class="pic"><div class="tag"><small>No cardio</small><b>Just results</b></div></div>
+</section>
+
+<section>
+  <div class="wrap c-center">
+    <div class="label kicker">Sound familiar?</div>
+    <h2>You're putting in the effort.<br>Just not seeing the results.</h2>
+    <p>You're showing up. You're trying. But without a <b>clear program, expert coaching,</b> and the right data behind you, progress stalls. And eventually, so does motivation.</p>
+    <p>Most gyms throw you straight into a session and hope for the best. RTB is different. The 21 Day Strength Reset is a <b>complete transformation system</b>, built around you, before you even pick up a weight.</p>
+  </div>
+</section>
+<hr class="c-rule">
+
+<section class="c-inc">
+  <div class="wrap">
+    <div class="label kicker" style="text-transform:none">What's included</div>
+    <div class="head"><h2>Everything you need.<br>Nothing you don't.</h2><p>Every element of this reset has been designed to work together. Nothing is filler.</p></div>
+    <div class="c-grid">
+      <div class="c-card"><div class="n">01</div><div><h3>RTB Strength Sessions</h3><p>Coach led small group training, <b>capped at 12 people</b>, not 40 like the big franchises. Every lift gets real attention. Your program is tailored to your level from day one. No random workouts. No cardio. Unlimited for 21 days.</p></div></div>
+      <div class="c-card"><div class="n">02</div><div><h3>Personal Onboarding with Josh</h3><p>Before you train a single rep, RTB founder <b>Josh Curry</b> maps out exactly where you're going. Clear goals. Real numbers. A plan that's yours.</p></div></div>
+      <div class="c-card"><div class="n">03</div><div><h3>Body Composition Scan</h3><p>Not just your weight. The full picture. Muscle mass, body fat percentage, and your optimal targets for both. The baseline that makes everything measurable.</p></div></div>
+      <div class="c-card"><div class="n">04</div><div><h3>1 Free Guest Pass for a Friend</h3><p>Bring a friend to a class on us. Training is easier with someone you know beside you, and <b>they train free</b>.</p></div></div>
+      <div class="c-card"><div class="n">05</div><div><h3>Nutrition Consultation with Liz Domenico</h3><p>RTB's nutrition coach. Liz specialises in helping people build muscle and drop body fat without extreme dieting. Learn exactly how to fuel your reset.</p></div></div>
+      <div class="c-card"><div class="n">06</div><div><h3>Customised Training Program</h3><p>Built specifically for you during onboarding. <b>Yours to keep</b>, whether you continue with RTB or not.</p></div></div>
+    </div>
+    <div class="c-bonus"><p><b>BONUS: Liz's Nutrition Starter Guide.</b> Your protein target, 10 of Liz's recipes with the numbers done, and three full example days with every meal pictured. In your inbox the day you start.</p><span>FREE</span></div>
+  </div>
+</section>
+
+<section class="c-book" id="book">
+  <div class="wrap">
+    <div class="skip"><a class="btn light" href="https://r.newie.app/1xzjlkfjuutb" data-cta="buy-top" target="_blank" rel="noopener">Skip the call, buy now</a></div>
+  </div>
+  <!--APPLY-->
+</section>
+
+<section class="c-proof">
+  <div class="wrap c-center" style="max-width:none">
+    <div class="label kicker" style="text-transform:none">Real Results</div>
+    <h2>The system works.<br>Here's the proof.</h2>
+    <p>These aren't outliers. This is what happens when you stop guessing and start training with a plan.</p>
+  </div>
+  <div class="wrap">
+    <div class="cards">
+      <div class="c-res"><img src="img/classic/r1.jpg" alt="Scott before and after" loading="lazy"><div class="nums"><div><b>-3%</b><span>Body Fat</span></div><div><b>+10kg</b><span>Muscle Gain</span></div></div><q>No matter what I tried I could never gain weight until I did the RTB program.</q><cite>Scott Tulloch</cite></div>
+      <div class="c-res"><img src="img/classic/r2.jpg" alt="TK before and after" loading="lazy"><div class="nums"><div><b>-15%</b><span>Body Fat</span></div><div><b>+2kg</b><span>Muscle Gain</span></div></div><q>They've transformed my body and fitness level in ways I never imagined.</q><cite>TK Hurst</cite></div>
+      <div class="c-res"><img src="img/classic/r3.jpg" alt="Cam before and after" loading="lazy"><div class="nums"><div><b>-10%</b><span>Body Fat</span></div><div><b>+50kg</b><span>Bench Press</span></div></div><q>I've been coming here for two years, and it has completely transformed the way I train and how I feel about working out.</q><cite>Cam Lynch</cite></div>
+      <div class="c-res"><img src="img/classic/r4.jpg" alt="Emily before and after" loading="lazy"><div class="nums"><div><b>+2kg</b><span>Muscle Gain</span></div><div><b>-10kg</b><span>Weight loss</span></div></div><q>I worked with Liz for nutrition and RTB classes and lost 10kg after struggling to lose weight for years.</q><cite>Emily</cite></div>
+      <div class="c-res"><img src="img/classic/r5.jpg" alt="Chelsey before and after" loading="lazy"><div class="nums"><div><b>-15%</b><span>Body Fat</span></div><div><b>+3kg</b><span>Muscle Gain</span></div></div><q>I did 5 years of CrossFit and my body didn't change. 12 weeks at RTB changed my body completely.</q><cite>Chelsey Taylor</cite></div>
+      <div class="c-res"><img src="img/classic/r6.jpg" alt="Stef before and after" loading="lazy"><div class="nums"><div><b>60kg</b><span>Body Weight</span></div><div><b>60kg</b><span>Body Weight</span></div></div><q>My body weight stayed the same but my body totally transformed.</q><cite>Stef S</cite></div>
+    </div>
+    <div class="c-more"><a class="btn" href="#apply" data-cta="proof">I want results like this →</a></div>
+  </div>
+</section>
+
+<div class="c-nopressure"><div class="wrap">
+  <h4>No pressure. No awkward sales pitch.</h4>
+  <p>If you decide RTB isn't for you after 21 days, that's completely fine. <b>You still leave better than you arrived.</b></p>
+  <ul><li>✔ Your customised training program</li><li>✔ A free guest pass for a friend</li><li>✔ 1 month of program access</li></ul>
+</div></div>
+
+<section class="c-final">
+  <div class="wrap grid">
+    <div>
+      <div class="lbl">Ready to reset?</div>
+      <h3>Book a free<br>15 min call.</h3>
+      <p>Before anything, we want to make sure the Reset is right for you. <b>Book a quick call with the RTB team</b>, no pressure, no pitch. Just a straight conversation about where you're at and whether this makes sense for your goals.</p>
+      <dl><dt>Duration</dt><dd>21 Days</dd><dt>Locations</dt><dd>Windsor &amp; Chelsea Heights</dd><dt>Investment</dt><dd>$150</dd><dt>Class size</dt><dd>Capped at 12 people</dd></dl>
+    </div>
+    <div class="go">
+      <a class="btn" href="#apply" data-cta="final">Book my free call →</a>
+      <a class="btn light" href="https://r.newie.app/1xzjlkfjuutb" data-cta="buy-bottom" target="_blank" rel="noopener">Buy now</a>
+    </div>
+  </div>
+</section>
+
+<section class="c-reviews">
+  <div class="wrap c-center" style="max-width:none">
+    <div class="label kicker" style="text-transform:none">Google Reviews</div>
+    <h2>Don't take our word for it.</h2>
+  </div>
+  <div class="wrap" style="margin-top:36px">
+    <script src="https://elfsightcdn.com/platform.js" async></script>
+    <div class="elfsight-app-8dee4dcc-abe6-4e79-b12b-595a0dac35fa" data-elfsight-app-lazy></div>
+  </div>
+</section>
+
+<div class="sticky"><a href="#apply" data-cta="sticky">Book a free call →</a></div>

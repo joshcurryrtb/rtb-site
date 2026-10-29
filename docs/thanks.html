@@ -13,6 +13,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
+<script src="/lab.js"></script>
+<!-- Microsoft Clarity: heatmaps + recordings, live domain only -->
+<script>
+if('__CLARITY_ID__'.indexOf('CLARITY')<0&&/(^|\.)rtbgym\.com\.au$/.test(location.hostname)&&!/[?&]lab=/.test(location.search)){(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window,document,"clarity","script","__CLARITY_ID__");}
+</script>
 <!-- Meta Pixel -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -68,7 +75,7 @@ gtag('js',new Date());gtag('config','G-8KKB094G2J');gtag('config','AW-1687163028
     </div>
   </div>
 </section>
-<script>(function(){var src=(location.search.match(/src=([a-z]+)/)||[])[1]||'unknown';if(src==='call')document.getElementById('callvids').style.display='';})();</script>
+<script>(function(){var src=(location.search.match(/src=([a-z]+)/)||[])[1]||'unknown';if(window.LAB)LAB.ev('booked',{src:src});if(src==='call')document.getElementById('callvids').style.display='';})();</script>
 <script>
 /* One count per booking. This page reloads (refresh, back button, reopened tab) and each load used to fire
    Lead + Schedule again, inflating Ads Manager. Fire once per browser per 12 hours, with an eventID so Meta can

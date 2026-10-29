@@ -4,6 +4,13 @@ import pathlib,re,shutil
 root=pathlib.Path(__file__).parent; src=root/'src'; docs=root/'docs'; docs.mkdir(exist_ok=True)
 head=(src/'_head.html').read_text(); foot=(src/'_footer.html').read_text()
 shutil.copy(src/'site.css',docs/'site.css')
+# Landing page lab (29 Oct 2026): experiments.json is baked into docs/lab.js. Drafts ship too so ?lab=ID:V previews work; only `live` ones split traffic.
+import json
+LAB=json.loads((src/'experiments.json').read_text())
+lab_cfg={'api':'https://lilmmmxgoprrvsnrzppb.supabase.co/functions/v1/lab','exps':[{k:x[k] for k in ('id','status','pages','variants')} for x in LAB['experiments'] if x['status'] in ('draft','live')]}
+for x in lab_cfg['exps']:
+    for v in x['variants'].values(): v.pop('note',None)
+(docs/'lab.js').write_text((src/'lab.js').read_text().replace('__LAB_CFG__',json.dumps(lab_cfg,separators=(',',':'))))
 # Apply landing pages: one template, three audiences. Women + men are ad only pages; `apply` is the
 # gender neutral one for Instagram bios and Google. The gym comes from ?gym=windsor|chelsea.
 APPLY={'apply':('all','Apply for the 21 Day Strength Reset | RTB Gym','Stronger and leaner with zero cardio. Coached strength training capped at 12, in Windsor and Chelsea Heights. Apply for the 21 Day Strength Reset.'),
@@ -11,21 +18,40 @@ APPLY={'apply':('all','Apply for the 21 Day Strength Reset | RTB Gym','Stronger 
  'apply-men':('men','Apply for the 21 Day Strength Reset | RTB Gym','Stronger, leaner and built to last with zero cardio. Coached strength training for men, capped at 12. Apply for the 21 Day Strength Reset.')}
 tpl=(src/'_apply.tpl.html').read_text()
 sources=[(f.name.replace('.src.html',''),f.read_text()) for f in sorted(src.glob('*.src.html'))]
-sources+=[(pg,tpl.replace('__G__',g).replace('__T__',t).replace('__D__',d)) for pg,(g,t,d) in APPLY.items()]
+# 30 Oct 2026 (Josh): the classic page is now THE landing page on every lead source URL. The old quiz page lives on at
+# apply-quiz / apply-quiz-women / apply-quiz-men (noindex) for rollback or a future test.
+sources=[s for s in sources if s[0]!='reset-chelsea']  # reset-chelsea.src.html kept for history; classic replaces it
+sources+=[(pg.replace('apply','apply-quiz',1),tpl.replace('__G__',g).replace('__T__',t).replace('__D__',d)) for pg,(g,t,d) in APPLY.items()]
+# Classic pages (30 Oct 2026): the May to Aug Squarespace 21 day page rebuilt, with the apply quiz where its calendar was.
+# Same quiz, styles and script as the apply template, so leads, Meta events and the lab all work the same.
+CLASSIC={'apply':('all',''),'apply-women':('women',''),'apply-men':('men',''),'reset-chelsea':('all','chelsea')}  # page: (quiz gender, default gym)
+cb=(src/'_classic.body.html').read_text()
+c_style=tpl[:tpl.index('</style>')+8]
+c_apply=tpl[tpl.index('<section id="apply"'):tpl.index('</section>',tpl.index('<section id="apply"'))+10]
+c_script=tpl[tpl.rindex('<script>\n(function(){'):]
+for pg,(g,gym) in CLASSIC.items():
+    body=f'<!-- title:21 Day Strength Reset | RTB Gym|desc:Coached strength training capped at 12 in Windsor and Chelsea Heights. 21 days, $150, all inclusive. -->\n'+c_style+cb.replace('<!--APPLY-->',c_apply)+c_script
+    body=body.replace('__G__',g)
+    if gym: body=body.replace("P.get('gym'):(ST.gym||'');","P.get('gym'):(ST.gym||'"+gym+"');",1)
+    sources.append((pg,body))
 for page,body in sources:
     m=re.search(r'<!--\s*title:(.*?)\|desc:(.*?)-->',body,re.S)
     title=m.group(1).strip() if m else 'RTB Gym'; desc=m.group(2).strip() if m else ''
     out=head.replace('__TITLE__',title).replace('__DESC__',desc).replace('__PAGE__',page)+body+foot
-    if page=='reset' or page in APPLY or page.startswith('reset-') or page.startswith('experience-'):  # ad landing page: no way off the page except booking
+    QUIZ=['apply-quiz'+k[5:] for k in APPLY]
+    if page=='reset' or page in QUIZ or page in CLASSIC or page.startswith('reset-') or page.startswith('experience-'):  # ad landing page: no way off the page except booking
         out=re.sub(r'<a href="index.html">(<img class="logo"[^>]*>)</a>',r'\1',out)
         out=re.sub(r'\s*<button class="burger".*?</button>','',out,flags=re.S)
         out=re.sub(r'\s*<div class="links">.*?</div>','',out,count=1,flags=re.S)
-        if page in APPLY:
+        if page in CLASSIC:
+            out=out.replace('href="apply.html#apply"','href="#apply"').replace('href="apply.html"','href="#apply"')
+            if page!='apply': out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
+        if page in QUIZ:
             out=out.replace('<a class="cta" href="apply.html#apply">Book a free call</a>','<a class="cta" href="#apply">Explore my options</a>')
             out=out.replace('href="apply.html#apply"','href="#apply"').replace('href="apply.html"','href="#apply"')
             if page!='apply': out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
         out=out.replace('href="reset.html#book"','href="#book"')
-        if page.startswith('reset-') or page.startswith('experience-'):  # gym specific ad pages (22 Oct 2026): ad only, every CTA stays on the page
+        if (page.startswith('reset-') or page.startswith('experience-')) and page not in CLASSIC:  # gym specific ad pages (22 Oct 2026): ad only, every CTA stays on the page
             out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
             out=out.replace('href="apply.html#apply"','href="#book"').replace('href="apply.html"','href="#book"')
             if page.startswith('experience-'): out=out.replace('>Book a free call</a>','>Claim your free pass</a>')  # free pass page, no call
