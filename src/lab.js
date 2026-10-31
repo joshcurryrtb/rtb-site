@@ -16,6 +16,7 @@ var rnd=function(){if(window.crypto&&crypto.getRandomValues){var a=new Uint32Arr
 var S={};
 try{S=JSON.parse(localStorage.getItem('rtb_lab')||'{}')}catch(e){}
 if(!S.vid) S={vid:uuid(),a:{}};
+if(P.get('labstaff')==='1') S.staff=1;  /* Josh / staff browsers: still logged, but flagged test so they never count */
 S.a=S.a||{};
 var save=function(){try{localStorage.setItem('rtb_lab',JSON.stringify(S))}catch(e){}};
 
@@ -72,7 +73,7 @@ var maxScroll=0, maxSec=0, fired={};
 var secs=function(){return Math.round((vis+(lastVis?Date.now()-lastVis:0))/100)/10};
 function flush(){
   if(!ON||!Q.length) return;
-  var body=JSON.stringify({vid:S.vid,sid:sid,page:page,assign:S.a,utm:utm,mobile:matchMedia('(max-width:760px)').matches,test:!LIVE,ev:Q.splice(0,25)});
+  var body=JSON.stringify({vid:S.vid,sid:sid,page:page,assign:S.a,utm:utm,mobile:matchMedia('(max-width:760px)').matches,test:!LIVE||!!S.staff,ev:Q.splice(0,25)});
   try{if(navigator.sendBeacon&&navigator.sendBeacon(CFG.api,new Blob([body],{type:'text/plain'}))) return}catch(e){}
   try{fetch(CFG.api,{method:'POST',body:body,keepalive:true,headers:{'content-type':'text/plain'}})}catch(e){}
 }
