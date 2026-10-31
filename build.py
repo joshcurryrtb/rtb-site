@@ -28,13 +28,13 @@ CLASSIC={'apply':('all',''),'apply-women':('women',''),'apply-men':('men',''),'r
 # V2 pages (1 Nov 2026): Undeniable workshop page structure with RTB content. Visitors reach them only through the AP05 redirect.
 V2={'apply-v2':('all',''),'apply-v2-women':('women',''),'apply-v2-men':('men',''),'reset-chelsea-v2':('all','chelsea')}
 V2_COPY={
- 'all':{'bar':'For busy adults in Windsor &amp; Chelsea Heights who want to get <b>strong</b>. Max 12 per class.',
+ 'all':{'bar':'For anyone in Windsor &amp; Chelsea Heights who wants to get <b>strong</b>. Small group coaching.',
         'h1':'Stronger and leaner in <span class="hl">21 days</span>. With a coach on every rep.',
         'faqq':'Will I lose my fitness without cardio?','faqa':'Strength work gets your heart going. Most members say daily life feels easier within weeks.'},
- 'women':{'bar':'For women in Windsor &amp; Chelsea Heights who want to get <b>strong and toned</b>. Max 12 per class.',
+ 'women':{'bar':'For anyone in Windsor &amp; Chelsea Heights who wants to get <b>strong</b>. Small group coaching.',
         'h1':'Stronger, leaner and more confident in <span class="hl">21 days</span>.',
         'faqq':'Will lifting make me bulky?','faqa':'No. Building real size takes years of eating and training for it. In 21 days you get stronger, firmer and more confident.'},
- 'men':{'bar':'For men in Windsor &amp; Chelsea Heights who want to get <b>strong and lean</b>. Max 12 per class.',
+ 'men':{'bar':'For anyone in Windsor &amp; Chelsea Heights who wants to get <b>strong</b>. Small group coaching.',
         'h1':'Stronger, leaner and built to last. <span class="hl">21 days</span> to prove it.',
         'faqq':'Will I lose my fitness without cardio?','faqa':'Strength work gets your heart going. Most members say daily life feels easier within weeks.'}}
 V2_YES={'all':['You want to get stronger and leaner without living on a treadmill','You want someone to tell you exactly what to do and check you do it right',
