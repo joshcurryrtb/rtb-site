@@ -120,7 +120,7 @@
         "reset-chelsea-v2"
       ],
       "primary": "booked",
-      "hypothesis": "Josh's coach's page (Undeniable Scale Workshop) structure: qualifier bar, video hero, results first, founder letter inviting scepticism, is / isn't for you, week by week, calendar in page, FAQ after. Both sides calendar first (1 Nov 2026). Same Meta link: the lab redirects half the visitors to the v2 page.",
+      "hypothesis": "Josh's coach's page (Undeniable Scale Workshop) structure: qualifier bar, results first, founder letter inviting scepticism, is / isn't for you, week by week, calendar in page, FAQ after. Both sides calendar first and both carry the same hero video with B roll (1 Nov 2026), so this tests page layout only. Same Meta link: the lab redirects half the visitors to the v2 page.",
       "started": null,
       "variants": {
         "A": {
