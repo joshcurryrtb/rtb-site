@@ -257,6 +257,10 @@ body.locked .nav2{position:sticky;bottom:0;z-index:6;background:#fff;margin:12px
 .c-final .go{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
 .c-final .go .btn{background:#fff;color:#000;font-size:15px;padding:20px 44px}
 .c-final .go .btn.light{background:#333;color:#fff}
+.c-vid{padding-block:clamp(40px,6vw,72px);text-align:center}
+.c-vid .v{max-width:min(320px,78vw);margin:0 auto}
+.c-vid .play{background:#FF7000;color:#fff;font:600 13px/1.3 Epilogue,sans-serif;padding:10px 14px;border-radius:10px 10px 0 0}
+.c-vid video{width:100%;display:block;background:#000;border-radius:0 0 10px 10px;aspect-ratio:9/16;object-fit:cover}
 @media (max-width:860px){
  .c-hero{grid-template-columns:1fr;min-height:0}
  .c-hero .txt{padding:36px 20px 32px}
@@ -278,6 +282,14 @@ body.locked .nav2{position:sticky;bottom:0;z-index:6;background:#fff;margin:12px
     </div>
   </div>
   <div class="pic"><div class="tag"><small>No cardio</small><b>Just results</b></div></div>
+</section>
+
+<!-- 1 Nov 2026 (Josh): same hero video as the v2 page, so AP05 tests the two page layouts, not video vs no video. -->
+<section class="c-vid">
+  <div class="v">
+    <div class="play">🔈 Hit play to meet Josh and see how the Reset works</div>
+    <video controls playsinline preload="none" poster="img/vid-before-call.jpg"><source src="vid/lp-hero.mp4" type="video/mp4"></video>
+  </div>
 </section>
 
 <section>
