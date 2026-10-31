@@ -1,0 +1,202 @@
+<!-- V2 page (1 Nov 2026): built on the structure of Josh's coach's Undeniable Scale Workshop page, filled with RTB proof
+     and what our own data says works (price on the page, offer stack, named results, calendar straight away, no quiz).
+     build.py fills {{tokens}} per audience, swaps <!--CAL--> for the booking calendar and adds the red qualifier bar to the nav.
+     Split tested against the classic page by redirect (experiment AP05), so Meta ads keep one link. -->
+<style>
+.qbar{background:var(--red);color:#fff;text-align:center;font:600 12px/1.35 Epilogue,sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:8px var(--pad)}
+.qbar b{text-decoration:underline;text-underline-offset:3px}
+.v-hero{text-align:center;padding-block:clamp(40px,6vw,80px) clamp(48px,6vw,80px)}
+.v-hero h1{font-size:clamp(42px,6.4vw,84px);max-width:16ch;margin:0 auto}
+.v-hero .sub{margin:22px auto 0;max-width:46ch;color:var(--grey);font-size:clamp(17px,1.8vw,20px)}
+.v-hero .sub b{color:var(--ink);font-weight:600}
+.v-vid{max-width:min(320px,78vw);margin:28px auto 0}
+.v-vid .play{background:#FF7000;color:#fff;font:600 13px/1.3 Epilogue,sans-serif;padding:10px 14px;border-radius:10px 10px 0 0}
+.v-vid video{width:100%;display:block;background:#000;border-radius:0 0 10px 10px;aspect-ratio:9/16;object-fit:cover}
+.v-go{margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.v-go .price{font-size:14px;color:var(--grey)}.v-go .price b{color:var(--ink)}
+.btn{display:inline-block;background:#000;color:#fff;border-radius:999px;padding:18px 44px;font:600 15px Epilogue,sans-serif;text-transform:uppercase;letter-spacing:.04em;text-decoration:none}
+.btn.red{background:var(--red)}
+.btn.light{background:#d9d9d9;color:#000;padding:13px 32px;font-size:13px}
+.v-c{text-align:center;max-width:760px;margin:0 auto}
+.v-c p{color:var(--grey);font-size:17px;line-height:1.6;margin:18px auto 0;max-width:52ch}
+.v-res{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:44px}
+.v-res .r{background:#fff;border:1px solid var(--line);padding:20px;display:flex;flex-direction:column}
+.v-res .nums{display:grid;grid-template-columns:1fr 1fr;text-align:center;margin:18px 0 14px;padding-bottom:16px;border-bottom:1px solid #000}
+.v-res .nums b{display:block;font:400 28px Anton,sans-serif}.v-res .nums span{font-size:12px;color:var(--grey)}
+.v-res q{font-size:14px;line-height:1.55;color:var(--grey);quotes:none;flex:1}
+.v-res cite{display:block;font:600 13px Epilogue,sans-serif;font-style:normal;margin-top:14px}
+.v-letter{max-width:720px;margin:0 auto}
+.v-letter h2{text-align:center}
+.v-letter .body{margin-top:36px;font-size:18px;line-height:1.7}
+.v-letter .body p+p{margin-top:18px}
+.v-letter .sig{display:flex;align-items:center;gap:16px;margin-top:32px}
+.v-letter .sig img{width:72px;height:72px;border-radius:50%;object-fit:cover}
+.v-letter .sig b{display:block;font:400 26px Anton,sans-serif;text-transform:uppercase}
+.v-letter .sig span{font-size:14px;color:var(--grey)}
+.v-fit{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:44px}
+.v-fit>div{background:#fff;border:1px solid var(--line);padding:clamp(24px,3vw,40px)}
+.v-fit h3{font-size:clamp(24px,2.6vw,32px);margin-bottom:18px}
+.v-fit ul{list-style:none;display:grid;gap:12px;font-size:16px;line-height:1.5}
+.v-fit li{display:grid;grid-template-columns:28px 1fr}
+.v-fit .yes li:before{content:"✔";color:#0a0;font-weight:700}
+.v-fit .no li:before{content:"✕";color:var(--red);font-weight:700}
+.v-weeks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:44px}
+.v-weeks>div{background:#fff;border:1px solid var(--line);padding:clamp(22px,2.6vw,34px)}
+.v-weeks .wk{font:400 clamp(30px,3vw,40px)/1 Anton,sans-serif;text-transform:uppercase}
+.v-weeks .wk small{display:block;font:500 12px Epilogue,sans-serif;color:var(--grey);letter-spacing:.06em;margin-top:8px}
+.v-weeks ul{margin:18px 0 0 18px;font-size:15px;line-height:1.55;color:#333;display:grid;gap:8px}
+.v-inc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:44px}
+.v-inc>div{background:#fff;border:1px solid var(--line);padding:24px}
+.v-inc b{display:block;font:700 16px Epilogue,sans-serif;margin-bottom:6px}
+.v-inc p{font-size:14px;line-height:1.5;color:var(--grey)}
+.v-price{margin-top:8px;background:#000;color:#fff;padding:clamp(24px,3vw,40px);display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.v-price p{color:#ccc;font-size:16px;max-width:52ch}.v-price p b{color:#fff}
+.v-price .amt{font:400 clamp(52px,6vw,76px)/1 Anton,sans-serif}.v-price .amt s{color:#777;font-size:.5em;margin-right:10px}
+.v-book{background:#000;color:#fff}
+.v-book h2{color:#fff;text-align:center}
+.v-book .lede{color:#ccc;text-align:center;margin:16px auto 0}
+.v-book .card{background:#fff;border-radius:12px;padding:8px;margin:32px auto 0;max-width:900px}
+.v-book .skip{text-align:center;margin-top:24px;font-size:14px;color:#aaa}
+.v-book .skip a{color:#fff}
+.v-team{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(28px,4vw,64px);align-items:center}
+.v-team img{width:100%;border-radius:4px}
+.v-team p{color:var(--grey);font-size:17px;line-height:1.6;margin-top:16px}.v-team p b{color:var(--ink)}
+.v-faq{max-width:760px;margin:36px auto 0}
+.v-faq details{border-bottom:1px solid var(--line);padding:18px 0}
+.v-faq summary{font:600 18px Epilogue,sans-serif;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.v-faq summary:after{content:"+";font-size:22px;line-height:1}
+.v-faq details[open] summary:after{content:"−"}
+.v-faq p{margin-top:10px;color:var(--grey);font-size:16px;line-height:1.6}
+.swipe{display:none}
+@media (max-width:860px){.swipe{display:block;font-size:13px!important;margin-top:10px!important}}
+.v-small{font-size:12px;color:var(--grey);text-align:center;max-width:70ch;margin:0 auto;padding-bottom:40px}
+@media (max-width:860px){
+ .v-fit,.v-weeks,.v-team{grid-template-columns:1fr}
+ .v-inc{grid-template-columns:1fr 1fr}.v-inc>div{padding:16px}
+ /* results swipe sideways on phones so the calendar isn't 10,000px down */
+ .v-res{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:calc(-1*var(--pad));padding-inline:var(--pad);scrollbar-width:none}
+ .v-res .r{flex:0 0 80%;scroll-snap-align:center}
+ .v-price{flex-direction:column;align-items:flex-start}
+}
+</style>
+
+<section class="v-hero">
+  <div class="wrap">
+    <h1>{{h1}}</h1>
+    <p class="sub">A 21 day coached strength program in groups <b>capped at 12</b>. Your own program, a body scan, a nutrition consult with Liz and a coach on every session. <b>Zero cardio.</b></p>
+    <div class="v-vid">
+      <div class="play">🔈 Hit play to meet Josh and see how the Reset works</div>
+      <video controls playsinline preload="none" poster="img/vid-before-call.jpg"><source src="vid/booked-before-call.mp4" type="video/mp4"></video>
+    </div>
+    <div class="v-go">
+      <a class="btn red" href="#apply" data-cta="hero">Book my free call →</a>
+      <div class="price">Normally $89 a week. <b>Your first 21 days: $150, all inclusive.</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="v-c"><div class="label kicker">Real members. Real numbers.</div><h2>What happens when you train with a plan.</h2><p class="swipe">Swipe for more →</p></div>
+    <div class="v-res">
+      <div class="r"><img src="img/classic/r1.jpg" alt="Scott before and after" loading="lazy"><div class="nums"><div><b>-3%</b><span>Body Fat</span></div><div><b>+10kg</b><span>Muscle Gain</span></div></div><q>No matter what I tried I could never gain weight until I did the RTB program.</q><cite>Scott Tulloch</cite></div>
+      <div class="r"><img src="img/classic/r5.jpg" alt="Chelsey before and after" loading="lazy"><div class="nums"><div><b>-15%</b><span>Body Fat</span></div><div><b>+3kg</b><span>Muscle Gain</span></div></div><q>I did 5 years of CrossFit and my body didn't change. 12 weeks at RTB changed my body completely.</q><cite>Chelsey Taylor</cite></div>
+      <div class="r"><img src="img/classic/r4.jpg" alt="Emily before and after" loading="lazy"><div class="nums"><div><b>+2kg</b><span>Muscle Gain</span></div><div><b>-10kg</b><span>Weight loss</span></div></div><q>I worked with Liz for nutrition and RTB classes and lost 10kg after struggling to lose weight for years.</q><cite>Emily</cite></div>
+      <div class="r"><img src="img/classic/r2.jpg" alt="TK before and after" loading="lazy"><div class="nums"><div><b>-15%</b><span>Body Fat</span></div><div><b>+2kg</b><span>Muscle Gain</span></div></div><q>They've transformed my body and fitness level in ways I never imagined.</q><cite>TK Hurst</cite></div>
+      <div class="r"><img src="img/classic/r3.jpg" alt="Cam before and after" loading="lazy"><div class="nums"><div><b>-10%</b><span>Body Fat</span></div><div><b>+50kg</b><span>Bench Press</span></div></div><q>I've been coming here for two years, and it has completely transformed the way I train and how I feel about working out.</q><cite>Cam Lynch</cite></div>
+      <div class="r"><img src="img/classic/r6.jpg" alt="Stef before and after" loading="lazy"><div class="nums"><div><b>60kg</b><span>Body Weight</span></div><div><b>60kg</b><span>Body Weight</span></div></div><q>My body weight stayed the same but my body totally transformed.</q><cite>Stef S</cite></div>
+    </div>
+    <div style="margin-top:44px">
+      <script src="https://elfsightcdn.com/platform.js" async></script>
+      <div class="elfsight-app-8dee4dcc-abe6-4e79-b12b-595a0dac35fa" data-elfsight-app-lazy></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap v-letter">
+    <div class="label kicker" style="text-align:center">A note from Josh</div>
+    <h2>Don't trust us. Test us.</h2>
+    <div class="body">
+      <p>If you're reading this, you've probably tried a few things already. Bootcamps. Apps. A membership you stopped using by March. You worked hard, and nobody could tell you why your body barely changed.</p>
+      <p>I'm an exercise scientist. I built RTB because most gyms sell effort, not direction. Random workouts and endless cardio feel productive. They rarely change how you look or how strong you are.</p>
+      <p>At RTB every session is coached, every group is capped at 12, and every program is written for the person doing it. We track your lifts and we scan your body, so you can see it working instead of hoping it is.</p>
+      <p>So don't take my word for it. Book the call, come in, and judge us on 21 days. Bring your scepticism. Watch how we coach. If we haven't earned your trust by the end, you still walk away stronger, with a program that's yours to keep.</p>
+    </div>
+    <div class="sig"><img src="img/josh.jpg" alt="Josh Curry"><div><b>Josh Curry</b><span>Founder and Head Coach, Exercise Scientist</span></div></div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="v-c"><div class="label kicker">Straight up</div><h2>Is the Reset right for you?</h2></div>
+    <div class="v-fit">
+      <div class="yes"><h3>This is for you if</h3><ul>{{yes}}</ul></div>
+      <div class="no"><h3>This is not for you if</h3><ul>
+        <li>You want a cheap gym to wander around on your own</li>
+        <li>You're after a 7 day quick fix or a crash diet</li>
+        <li>You want to be smashed with cardio until you can't stand</li>
+        <li>You won't turn up at least twice a week for 21 days</li>
+        <li>You'd rather not be coached or corrected</li>
+        <li>You think you already know everything about training</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="v-c"><div class="label kicker">How it runs</div><h2>Your 21 days, week by week.</h2></div>
+    <div class="v-weeks">
+      <div><div class="wk">Week 1<small>The baseline</small></div><ul><li>Personal onboarding: goals, history, the times that suit you</li><li>Body composition scan: muscle, body fat and your targets</li><li>Your program written for you</li><li>Every lift taught from scratch, weights matched to you</li></ul></div>
+      <div><div class="wk">Week 2<small>The build</small></div><ul><li>Nutrition consult with Liz</li><li>Liz's Nutrition Starter Guide: protein target, recipes, example days</li><li>Weights go up, tracked every session</li><li>Unlimited coached sessions, capped at 12</li></ul></div>
+      <div><div class="wk">Week 3<small>The proof</small></div><ul><li>Keep lifting heavier than week 1</li><li>Review with your coach: what changed and what's next</li><li>Your program is yours to keep</li><li>Choose to join the 16 week RTB Program, or don't. No pressure.</li></ul></div>
+    </div>
+    <div class="v-inc">
+      <div><b>Coached small group sessions</b><p>Unlimited for 21 days. Capped at 12, not 40.</p></div>
+      <div><b>Body composition scan</b><p>The full picture, not just your weight.</p></div>
+      <div><b>Nutrition consult with Liz</b><p>Fuel to build muscle and drop fat, no extreme dieting.</p></div>
+      <div><b>Your own program</b><p>Written for you. Yours to keep.</p></div>
+      <div><b>Liz's Nutrition Starter Guide</b><p>In your inbox the day you start.</p></div>
+      <div><b>1 free guest pass</b><p>Bring a friend to a class on us.</p></div>
+    </div>
+    <div class="v-price"><p><b>Everything above, all inclusive.</b> Normally $89 a week.</p><div class="amt"><s>$267</s>$150</div></div>
+    <div class="v-go"><a class="btn red" href="#apply" data-cta="mid">Book my free call →</a></div>
+  </div>
+</section>
+
+<section class="v-book" id="book">
+  <!--CAL-->
+</section>
+
+<section>
+  <div class="wrap v-team">
+    <img src="img/coaches.jpg" alt="RTB coaches" loading="lazy">
+    <div>
+      <div class="label kicker">Who's coaching you</div>
+      <h2>Coaches, not instructors.</h2>
+      <p>RTB was built by <b>Josh Curry</b>, exercise scientist and head coach. <b>Liz Domenico</b> runs nutrition. Every class has a coach watching every rep, correcting form and moving your weights up when you're ready.</p>
+      <p>Windsor: Alison, Ryan, Stefan, Brett and Marcus.<br>Chelsea Heights: Marcus, Sam, Brett and Hanz.</p>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="v-c"><div class="label kicker">Questions</div><h2>Before you book</h2></div>
+    <div class="v-faq">
+      <details open><summary>What happens on the call?</summary><p>A 15 minute chat with the RTB team. Your goal, the times that suit you, and whether the Reset is the right fit. No hard sell.</p></details>
+      <details><summary>How much is it?</summary><p>$150 for 21 days, all inclusive. Normally $89 a week.</p></details>
+      <details><summary>I've never lifted. Is that a problem?</summary><p>It's the most common starting point. Every lift is taught and your weights start where you are.</p></details>
+      <details><summary>How long are sessions?</summary><p>50 minutes. Warm up, lift, done. Morning and evening sessions at both gyms.</p></details>
+      <details><summary>{{faqq}}</summary><p>{{faqa}}</p></details>
+      <details><summary>Do I have to give up running?</summary><p>No. Keep it if you love it. Just do it separately, never in the same session as your lifting.</p></details>
+      <details><summary>What happens after 21 days?</summary><p>You can join the full 16 week RTB Program. Cancel any time. If it's not for you, you keep your program and the guide.</p></details>
+      <details><summary>Where are you?</summary><p>4 Duke Street, Windsor and 21/107 Wells Road, Chelsea Heights.</p></details>
+    </div>
+    <div class="v-go" style="margin-top:44px"><a class="btn red" href="#apply" data-cta="final">Book my free call →</a><a class="btn light" href="https://r.newie.app/1xzjlkfjuutb" data-cta="buy-bottom" target="_blank" rel="noopener">Skip the call, buy now</a></div>
+  </div>
+</section>
+<p class="v-small">Results vary from person to person and depend on attendance, effort and nutrition. The members shown trained at RTB and gave permission to share their results.</p>
+
+<div class="sticky"><a href="#apply" data-cta="sticky">Book a free call →</a></div>

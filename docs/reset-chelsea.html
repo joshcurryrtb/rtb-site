@@ -195,8 +195,8 @@ body.locked .nav2{position:sticky;bottom:0;z-index:6;background:#fff;margin:12px
 .unlock{text-align:center;margin:8px 0 28px}.unlock a{color:var(--grey);font:500 14px Epilogue,sans-serif}
 </style><!-- Classic page (30 Oct 2026): rebuild of the Squarespace 21-day-strength page that ran May to Aug 2026
      (2.6% of landing page views booked a call vs 1.7% on the apply pages). Same sections, copy and images.
-     Changes from the original (Josh 30 Oct): Google reviews instead of the photo gallery, Newie 21 day buy link, Liz guide bonus instead of $100 voucher, guest pass instead of calorie tracker, call with the RTB team. Also: the booking calendar is replaced by the apply quiz (captures leads who don't book,
-     still ends on the calendar), dashes removed, "Starts April 2026" dropped. build.py wraps this with the apply
+     Changes from the original (Josh 30 Oct): Google reviews instead of the photo gallery, Newie 21 day buy link, Liz guide bonus instead of $100 voucher, guest pass instead of calorie tracker, call with the RTB team. Also: 1 Nov 2026 calendar first again (Josh), the quiz in front of it removed;
+     dashes removed, "Starts April 2026" dropped. build.py wraps this with the apply
      template's styles and script. -->
 <style>
 .c-hero{display:grid;grid-template-columns:1fr 1fr;min-height:min(92vh,860px);background:var(--bg)}
@@ -311,14 +311,11 @@ body.locked .nav2{position:sticky;bottom:0;z-index:6;background:#fff;margin:12px
   <div class="wrap">
     <div class="skip"><a class="btn light" href="https://r.newie.app/1xzjlkfjuutb" data-cta="buy-top" target="_blank" rel="noopener">Skip the call, buy now</a></div>
   </div>
-  <section id="apply" class="alt" data-clarity-mask="true">
-  <div class="wrap">
-    <div class="app">
-      <div class="prog"><i id="bar"></i></div>
-      <div class="stepwrap" id="step"></div>
-    </div>
-  </div>
-</section>
+  <div id="apply" class="calbox"><div class="wrap">
+    <h2 style="text-align:center;color:#fff">Pick a time for your free call.</h2>
+    <p class="lede" style="text-align:center;margin:16px auto 0;color:#ccc">15 minutes with the RTB team. Your goals, your times, and whether the Reset fits. No hard sell.</p>
+    <div class="card" style="background:#fff;border-radius:12px;padding:8px;margin:32px auto 0;max-width:900px"><div id="calwrap"><iframe src="https://grow-api.hapana.com/widget/booking/8KzUE6BBWRni8g9f0wd5?which_location_are_you_interested_in=Chelsea+Heights" allow="payment" scrolling="no" title="Book your free call" id="8KzUE6BBWRni8g9f0wd5_page"></iframe></div></div>
+  </div></div>
 </section>
 
 <section class="c-proof">
@@ -375,260 +372,12 @@ body.locked .nav2{position:sticky;bottom:0;z-index:6;background:#fff;margin:12px
 <div class="sticky"><a href="#apply" data-cta="sticky">Book a free call →</a></div>
 <script>
 (function(){
-const G='all';  /* women | men | all, set by build.py */
-const API='https://lilmmmxgoprrvsnrzppb.supabase.co/functions/v1/apply';
-const CAL='8KzUE6BBWRni8g9f0wd5', CONSENT='apply-2026-10', PIXEL='449291172158210';
-const P=new URLSearchParams(location.search);
-const LIVE=/(^|\.)rtbgym\.com\.au$/.test(location.hostname);  /* local previews never send Meta events */
-const $=s=>document.querySelector(s);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const uuid=()=>crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g,()=>(Math.random()*16|0).toString(16));
-const cookie=n=>(document.cookie.match('(?:^|; )'+n+'=([^;]*)')||[])[1]||'';
-
-/* One application id per browser. Later steps and /booked reuse it so every Meta event fires once. */
-let ST={};
-try{ST=JSON.parse(localStorage.getItem('rtb_apply')||'{}')}catch(e){}
-if(!ST.sid||ST.page!==G||Date.now()-ST.t>30*864e5) ST={sid:uuid(),t:Date.now(),page:G};
-const save=()=>{try{localStorage.setItem('rtb_apply',JSON.stringify(ST))}catch(e){}};
-let GYM=['windsor','chelsea'].includes(P.get('gym'))?P.get('gym'):(ST.gym||'chelsea');
-ST.gym=GYM;
-['source','medium','campaign','content','term'].forEach(k=>{const v=P.get('utm_'+k);if(v){ST.utm=ST.utm||{};ST.utm[k]=v.slice(0,100)}});
-if(P.get('utm_content')) ST.concept=P.get('utm_content').slice(0,60);
-save();
-const seg=()=>(GYM==='windsor'?'win':'ch')+'-'+({women:'f',men:'m',all:'a'})[G];
-
-function track(ev,key,params){
- if(window.LAB){LAB.sid=ST.sid;({lead:'contact',sa:'complete'})[key]&&LAB.ev(({lead:'contact',sa:'complete'})[key])}  /* landing page lab funnel */
- if(ST['f_'+key]) return; ST['f_'+key]=1; save();
- const p=Object.assign({segment:seg(),gym:GYM,concept:ST.concept||''},window.LAB&&LAB.tag?{lab:LAB.tag}:{},params||{});
- if(!LIVE){console.log('[apply] local preview, not sent to Meta:',ev,p);return}
- if(window.fbq) fbq('track',ev,p,{eventID:'ap_'+ST.sid+'_'+key});
- if(window.gtag) gtag('event','apply_'+key,{segment:seg(),gym:GYM});
-}
-
-/* Quiz started: answered the first question. Custom event so the funnel shows where people drop before the contact step. */
-function started(){if(window.LAB){LAB.sid=ST.sid;LAB.ev('form_start')}if(ST.f_st)return;ST.f_st=1;save();if(!LIVE)return;if(window.fbq)fbq('trackCustom','ApplyStarted',{segment:seg(),gym:GYM,concept:ST.concept||''});if(window.gtag)gtag('event','apply_started',{segment:seg(),gym:GYM})}
-
-/* Server calls run in order and retry, so a slow first call can't be overtaken by a later one. */
-let Q=Promise.resolve(), CONTACT=null;
-const wait=ms=>new Promise(r=>setTimeout(r,ms));
-function post(body,tries,redo){
- return fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),keepalive:true})
-  .then(r=>{
-   if(r.status===404&&CONTACT&&!redo) return post(CONTACT,1,true).then(()=>post(body,0,true));
-   if(r.status>=500&&tries>0) return wait(1500).then(()=>post(body,tries-1,redo));
-  }).catch(()=>tries>0?wait(1500).then(()=>post(body,tries-1,redo)):null);
-}
-const API_ON=LIVE||location.hostname==='localhost';  /* preview hosts never write real leads */
-const send=body=>{if(!API_ON){console.log('[apply] preview, not sent:',body.step);return}Q=Q.then(()=>post(body,2))};
-const answers=()=>({goal:A.goal||'',tried:A.tried||[],block:A.block||[],days:A.days||'',start:A.start||'',why:A.why||''});
-
-const COPY={
- loc:{windsor:'Windsor',chelsea:'Chelsea Heights',_:''},
- h1:{women:'<span class="hl">Leaner.</span> Tighter. Twice as strong.<span class="kick">With zero cardio.</span>',
-     men:'<span class="hl">Stronger.</span> Leaner. Built to last.<span class="kick">With zero cardio.</span>',
-     all:'<span class="hl">Stronger.</span> Leaner. Defined.<span class="kick">With zero cardio.</span>'},
- heroImg:{women:'img/ba-01.jpg',men:'img/josh-ba.jpg',all:'img/josh-logo.jpg'},
- heroLabel:{windsor:'Coached by',chelsea:'Coached by',_:'Two gyms'},
- heroCard:{windsor:'Alison, Ryan, Stefan, Brett and Marcus.',chelsea:'Marcus, Sam, Brett and Hanz.',_:'Windsor and Chelsea Heights.'},
- pains:{
-  women:[["Cardio stopped working","The runs that once dropped weight now do nothing. More cardio just makes you smaller and softer, not leaner."],
-         ["No shape to show for it","Smaller but soft. No tone, nothing to show for the effort. Shape comes from muscle, and muscle comes from lifting."],
-         ["Weights feel like a boys' club","Nobody ever showed you how. At RTB every lift is taught and a coach sets your weight."]],
-  men:[["No plan, no progress","Wandering the floor picking machines. Busy is not the same as better."],
-       ["Strong once, not now","You played, you lifted, then life got busy. The strength faded quietly."],
-       ["Running but still soft","Plenty of kilometres, not much in the mirror. Running keeps the engine. Lifting builds the frame."]],
-  all:[["Cardio stopped working","The runs that once dropped weight now do nothing. More cardio just makes you smaller and softer, not leaner."],
-       ["No plan, no progress","Wandering the floor picking machines. Busy is not the same as better."],
-       ["Weights feel intimidating","Nobody ever showed you how. At RTB every lift is taught and a coach sets your weight."]]},
- pain4:{
-  'women-windsor':["No time","Work runs your calendar. Fifty minutes, coached, in and out before the day starts."],
-  'women-chelsea':["Everyone else comes first","School run, work, dinner, bed. These 50 minutes are the one thing that's yours."],
-  'men-windsor':["Big weekends, sharp Mondays","You want the social life and the look. Three sessions a week lets you have both."],
-  'men-chelsea':["Family comes first","Kids, work, the house. Everyone gets your time. These 50 minutes keep you strong for them."],
-  'all-windsor':["No time","Work runs your calendar. Fifty minutes, coached, in and out before the day starts."],
-  'all-chelsea':["Family comes first","Kids, work, the house. Everyone gets your time. These 50 minutes keep you strong for them."]},
- addr:{windsor:'4 Duke Street, Windsor',chelsea:'21/107 Wells Road, Chelsea Heights'}
-};
-
-/* Class timetable. Edit times here; the page section and the sessions step both read it. */
-const TT={
- windsor:[['Monday to Friday',[['Morning',['5:20am','6:00am','7:40am']],['Midday',['10:30am']],['Evening',['4:40pm','5:30pm','6:20pm']]]]],
- chelsea:[['Monday to Friday',[['Morning',['5:00am','6:00am','7:00am']],['Midday',['9:30am']],['Evening',['5:30pm','6:30pm']]]],
-          ['Saturday',[['Morning',['8:00am']]]]]
-};
-const ttHTML=g=>TT[g].map(([d,rows])=>`<div class="ttd">${d}</div>`+rows.map(([p,ts])=>`<div class="ttr"><span>${p}</span><div>${ts.map(t=>`<i>${t.slice(0,-2)}<small>${t.slice(-2)}</small></i>`).join('')}</div></div>`).join('')).join('');
-
-const GOALS={
- women:["Get strong and toned","Lose body fat without cardio","Community and vibes","Learn to lift weights safely","More energy and headspace","Honestly, all of it"],
- men:["Build muscle and look sharper","Get my strength back","A community of men to push me","Learn to lift weights safely","Lose the extra without cardio","Clear my head","Honestly, all of it"],
- all:["Get stronger","Build muscle and tone up","Lose body fat without cardio","Learn to lift weights safely","Community and vibes","More energy and headspace","Honestly, all of it"]
-};
-const SAFE=["Safe lifting is the whole point of coaching.","How do you keep me safe?","Groups are capped at 12, so a coach is watching every rep. Technique first, then weight. Our coaches adapt lifts around old injuries."];
-const FAT=["Good. That's exactly where lifting beats running.","Can I really lose fat with zero cardio?","Yes. Muscle is what changes your shape and keeps your metabolism up. Cardio burns calories while you do it. Muscle works for you all week."];
-const GOALFX={
- "Get strong and toned":["Tone is just muscle with less fat on top. That's what we build.","How fast will I see a change in shape?","Most women feel firmer within the 21 days. Your coach adds weight when you're ready, so every week you're lifting more than the last."],
- "Lose body fat without cardio":FAT,
- "Community and vibes":["That's the part people stay for.","What's the vibe like?","Groups are capped at 12, so you train with the same faces every week. Your coach knows your name, your lifts and your wins. Friendly, focused and zero judgement."],
- "Learn to lift weights safely":SAFE,
- "More energy and headspace":["That's the one people notice first.","Why would lifting give me more energy?","Hard cardio can leave you flat for the rest of the day. A lifting session leaves you pumped and empowered. And for 50 minutes the coach does the thinking, so your head finally gets to switch off."],
- "Honestly, all of it":["Good. One program covers all of it.","Can one program really do all that?","Yes. Lifting builds the muscle that changes your shape, burns fat all week, lifts your energy and builds your confidence. That's why we don't need cardio."],
- "Build muscle and look sharper":["That's exactly what heavy, coached lifting is for.","How quickly will I see a difference?","Most guys feel it within the 21 days. Your coach adds weight every week you're ready, and that's what builds size."],
- "Get my strength back":["Strength comes back faster than you think.","I used to lift. Where do I start?","Where you are now, not where you were. Your coach sets your weights and builds you back up week by week without wrecking you."],
- "Lose the extra without cardio":FAT,
- "A community of men to push me":["That's what keeps guys coming back.","What are the other guys like?","Groups are capped at 12, so you train with the same blokes every week. Everyone pushes each other, the coach knows your numbers, and nobody lets you coast."],
- "Clear my head":["50 minutes where you think about nothing else.","Why does lifting clear your head?","Phone away, the coach tells you exactly what to do, and all you think about is the next rep. Fifty minutes and you walk out reset."],
- "Stay fit for my family":["The best reason there is.","Why strength over cardio for that?","Strength is what lets you pick up the kids, carry the shopping and stay injury free for years. Cardio doesn't build that. Lifting does."],
- "Get stronger":["That's the whole program in two words.","How fast will I get stronger?","Most people add weight to the bar every week of the 21 days. Your coach sets the numbers, the app tracks them, and you watch them climb."],
- "Build muscle and tone up":["Muscle is what changes your shape. That's what we build.","How fast will I see a change?","Most people feel firmer within the 21 days. Your coach adds weight when you're ready, so every week you're lifting more than the last."]
-};
-
-function steps(){
- const goals=GOALS[G].slice(); if(G==='men'&&GYM==='chelsea') goals.push("Stay fit for my family");
- const list=[
- {id:'goal',type:'single',q:'What do you want most from the next 21 days?',opts:goals,
-  reply:a=>GOALFX[a.goal][0],qaFn:a=>GOALFX[a.goal].slice(1)},
- {id:'tried',type:'multi',q:"What have you tried so far?",sub:'Pick all that apply.',opts:["Running or cardio","HIIT or group classes","Gym on my own","Personal trainer","Nothing yet"],
-  reply:a=>{const t=a.tried||[];if(t.includes("Running or cardio")||t.includes("HIIT or group classes"))return"That's the one we hear most. It's not your effort. It's your direction.";if(t.includes("Gym on my own"))return"Most people train hard. Few train to a plan.";if(t.includes("Personal trainer"))return"Then you know what coaching does. This is coaching at a group price.";return"Perfect. No bad habits to undo."},
-  qa:["So why would this work when that didn't?","Because every session builds on the last. Your program is written for you, a coach sets your weights, and they go up when you're ready. Progress you can measure."]},
- {id:'block',type:'multi',q:"What's stopped you getting results so far?",sub:'Pick all that apply.',opts:["Not enough time","No plan, not sure what to do","Motivation drops off","Weights feel intimidating","Work and family come first","Old injury"],
-  reply:a=>`${a._cur||(a.block||[])[0]||'That'}. We hear that a lot.`,
-  qaFn:a=>{const m={"Not enough time":"Sessions are 50 minutes. Warm up, lift, done. You're in and out before the day starts.","No plan, not sure what to do":"You never have to think. The program is written, the coach runs it, you just lift.","Motivation drops off":"Max 12 people and a coach who knows your name and expects you. It's hard to ghost that.","Weights feel intimidating":"Classes are small, capped at 12, and everyone on the 21 Day pack gets extra help from the coach. Every lift is taught. You start at your weight, not anyone else's.","Work and family come first":"We're a classes only gym, so there's a huge timetable from 5am into the evening. Flexible booking lets you move your sessions around when life gets busy.","Old injury":"Our coaches adapt lifts around old injuries. Tell us about it on your call."};return["How does RTB fix that?",m[a._cur||(a.block||[])[0]]||m["Not enough time"]]}},
- {id:'contact',type:'contact',q:'Nice. Who are we building this plan for?',sub:'Apply and we send you 7 days of the RTB online program, free, straight to your inbox.'},
- {id:'days',type:'single',q:'How many sessions a week can you give it?',opts:["2","3","4 or more"],times:true,
-  reply:a=>({"2":"2 a week is great for beginners, sport people or to add to your other training. You can always upgrade later.","3":"3 a week is our most popular option.","4 or more":"4 or more a week is our transformation zone."})[a.days],
-  qa:["Do I need to be fit before I start?","No. Everyone starts somewhere, and the weights start where you are. The fitness comes from the training."]},
- {id:'start',type:'single',q:'When do you want to start?',opts:["This week","Next 2 weeks","This month","Just looking for now"],
-  reply:a=>a.start==="This week"?"Love it. Spots go fast.":"No stress. We'll work around you.",
-  qa:["What's in the 21 days?","Your first 21 days are designed to kick start your strength and fitness. Classes are unlimited, so use and abuse them. If you join the full 16 week program after that, you unlock body scans and the RTB Portal to keep you accountable, plus nutrition coaching with Coach Liz as an optional add on."]},
- {id:'why',type:'text',q:'What would it mean to feel properly strong 21 days from now?',sub:'Optional. Your coach reads this before your call.',
-  ph:"Keeping up with my kids. Feeling good in my clothes. Not dreading the gym."}
- ];
- /* No gym in the link (Instagram bio, Google): ask first, never guess. */
- if(!GYM) list.unshift({id:'gym',type:'gym',q:'Which gym is closest to you?'});
- return list;
-}
-
-let S=[],i=0,A={};
-/* Keep each step framed on a phone: the question at the top of the screen, Next pinned to the bottom. */
-function toStep(){const a=$('.app'),nav=document.querySelector('.nav');if(!a)return;if(document.body.classList.contains('locked')){a.scrollTop=0;return}const y=a.getBoundingClientRect().top+scrollY-(nav?nav.offsetHeight:0)-6;if(Math.abs(scrollY-y)>4)window.scrollTo({top:y,behavior:'smooth'})}
-function next(){
- A._cur=null; i++;
- if(i<S.length){ if(A.first) send({step:'progress',sid:ST.sid,answers:answers()}); render(); toStep(); } else result();
-}
-function render(){
- const s=S[i];$('#bar').style.width=(i/S.length)*100+'%';
- let h=`<div class="stepnum">${s.type==='gym'?'Before you start':`Step ${i+1} of ${S.length}`}</div><div class="q">${s.q}</div>${s.sub?`<p class="qsub">${s.sub}</p>`:''}`;
- if(s.type==='gym'){
-  h+=`<div class="opts">${['windsor','chelsea'].map(g=>`<button class="opt gymopt" data-gym="${g}">${COPY.loc[g]}<small>${COPY.addr[g]}</small></button>`).join('')}</div>`;
- } else if(s.type==='contact'){
-  h+=`<form id="cf" method="post" action="#" autocomplete="on" novalidate>
-  <label class="field"><span>First name</span><input id="f1" name="given-name" type="text" autocomplete="given-name" autocapitalize="words" enterkeyhint="next" value="${esc(A.first||'')}"></label>
-  <label class="field"><span>Email</span><input id="f2" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" enterkeyhint="next" value="${esc(A.email||'')}"></label>
-  <label class="field"><span>Mobile</span><input id="f3" name="tel" type="tel" autocomplete="tel" inputmode="tel" enterkeyhint="go" value="${esc(A.mobile||'')}"></label>
-  <input class="hp" id="hp" name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-  <p class="consent">By applying you agree RTB can contact you by phone, SMS and email about your application and our programs. Unsubscribe any time. <a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a>.</p>
-  <div class="err" id="err"></div></form>`;
- } else if(s.type==='text'){
-  h+=`<label class="field"><textarea id="t1" rows="3" maxlength="1000" placeholder="${s.ph}">${esc(A.why||'')}</textarea></label>`;
- } else {
-  h+=`<div class="opts">${s.opts.map(o=>`<button class="opt ${s.type==='multi'?'multi':''} ${(A[s.id]||[]).includes?.(o)||A[s.id]===o?'on':''}" data-o="${esc(o)}">${o}</button>`).join('')}</div>`;
-  if(s.times&&GYM) h+=`<div class="times"><b>${COPY.loc[GYM]} class times</b>${ttHTML(GYM)}<p>Sessions are 50 minutes.</p></div>`;
- }
- const prim=s.type==='contact'?'<button type="submit" form="cf" class="cta" id="go">Apply now</button>':s.type==='text'?`<button class="cta" id="go">${i===S.length-1?'See my result':'Continue'}</button>`:s.type==='multi'?'<button class="cta" id="go">Continue</button>':'<span></span>';
- h+=`<div class="reply" id="reply"></div><div class="nav2">${i>0?'<button class="back" id="back">← Back</button>':'<span></span>'}${prim}</div>`;
- $('#step').innerHTML=h;
- const back=$('#back'); if(back) back.onclick=()=>{i--;render();toStep()};
- if(s.type==='gym') document.querySelectorAll('.gymopt').forEach(b=>b.onclick=()=>{GYM=b.dataset.gym;ST.gym=GYM;save();paint();S=steps();i=0;render();toStep()});
- if(s.type==='contact') $('#cf').onsubmit=ev=>{ev.preventDefault();
-  const f=$('#f1').value.trim(),e=$('#f2').value.trim().toLowerCase(),m=$('#f3').value.trim(),d=m.replace(/\D/g,'');
-  if(!f||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)||!/^(0\d{9}|61\d{9}|4\d{8})$/.test(d)){$('#err').textContent='Add your name, a valid email and your mobile.';return}
-  A.first=f;A.email=e;A.mobile=m;
-  /* Give Meta the hashed contact details before Lead fires, so the server copy can match the person. */
-  if(LIVE&&window.fbq){try{fbq('init',PIXEL,{em:e,fn:f.toLowerCase(),ph:d.replace(/^0/,'61').replace(/^4/,'614'),external_id:ST.sid})}catch(x){}}
-  track('Lead','lead',{content_name:'RTB apply'});
-  CONTACT={step:'contact',sid:ST.sid,page:G,gym:GYM,first_name:f,email:e,phone:m,concept:ST.concept||'',utm:ST.utm||{},fbp:cookie('_fbp'),fbc:cookie('_fbc'),consent_version:CONSENT,page_url:location.origin+location.pathname,hp:$('#hp').value};
-  send(CONTACT);
-  document.body.classList.add('applied','locked');next()};
- if(s.type==='text') $('#go').onclick=()=>{A.why=$('#t1').value.trim();next()};
- document.querySelectorAll('.opt:not(.gymopt)').forEach(b=>b.onclick=()=>{
-  const o=b.dataset.o; started();
-  if(s.type==='single'){A[s.id]=o;document.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x===b));showReply(s,b)}
-  else{A[s.id]=A[s.id]||[];const k=A[s.id].indexOf(o);k<0?A[s.id].push(o):A[s.id].splice(k,1);b.classList.toggle('on');
-   if(k<0){A._cur=o;showReply(s,b)}else if(A._cur===o){const rest=A[s.id];if(rest.length){A._cur=rest[rest.length-1];showReply(s,document.querySelector(`.opt[data-o="${CSS.escape(A._cur)}"]`))}else{A._cur=null;$('#reply').classList.remove('show')}}}
- });
- if(s.type==='multi') $('#go').onclick=()=>{if(!(A[s.id]||[]).length){const r=$('#reply');r.innerHTML='<p class="ref">Pick at least one to continue.</p>';r.classList.add('show');return}next()};
-}
-function showReply(s,anchor){
- const qa=s.qaFn?s.qaFn(A):s.qa;
- const r=$('#reply');if(anchor)anchor.after(r);r.innerHTML=`<p class="ref">${esc(s.reply(A))}</p><div class="qa"><b>${qa[0]}</b><p>${qa[1]}</p></div>`;
- r.classList.remove('show');void r.offsetWidth;r.classList.add('show');
- r.scrollIntoView({behavior:'smooth',block:'nearest'});
- if(s.type==='multi') return;
- $('.nav2 span:last-child').outerHTML=`<button class="cta" id="next">Next</button>`;
- $('#next').onclick=next;
-}
-function result(){
- $('#bar').style.width='100%';
- track('SubmitApplication','sa',{goal:A.goal||'',start:A.start||''});
- send({step:'complete',sid:ST.sid,answers:answers()});
- const block=(A.block||[])[0]||'Time';
- $('#step').innerHTML=`<div class="stepnum">Application complete</div>
- <div class="q">You're a great fit, ${esc(A.first)}.</div>
- <p class="qsub" style="color:#000;font-size:18px">We'd like to welcome you to a free 15 minute phone consultation. Pick a time below.</p>
- <div id="calwrap" style="margin:8px 0 28px"></div>
- <div class="mirror"><div><small>Goal</small><b>${esc(A.goal||'')}</b></div><div><small>Up against</small><b>${esc(block)}</b></div><div><small>Sessions</small><b>${esc(A.days||'3')} a week</b></div><div><small>Start</small><b>${esc(A.start||'')}</b></div></div>
- <p style="font:400 16px/1.5 Epilogue">Here's the plan: coached sessions at ${COPY.loc[GYM]}, a program written for you, zero cardio, 21 days.</p>
- <div class="faqmini"><div><b>What happens on the call?</b><p>A 15 minute chat with a coach. Your goal, your times, and whether we're the right fit. No hard sell.</p></div>
- <div><b>What happens after 21 days?</b><p>You can join the full 16 week RTB Program. Cancel any time.</p></div></div>
- <p class="unlock"><a href="#" id="unlock">Back to the page</a></p>`;
- $('#unlock').onclick=ev=>{ev.preventDefault();document.body.classList.remove('locked');$('#apply').scrollIntoView()};
- /* The real Hapana call calendar, with their details already filled in. After booking it sends them to /booked. */
- /* Prefill the Grow booking form: full_name fills its Full Name box, the location key fills its required dropdown. */
- const q=new URLSearchParams({first_name:A.first,full_name:A.first,email:A.email,phone:A.mobile,which_location_are_you_interested_in:GYM==='chelsea'?'Chelsea Heights':'Windsor'});
- $('#calwrap').innerHTML=`<iframe src="https://grow-api.hapana.com/widget/booking/${CAL}?${q}" allow="payment" scrolling="no" title="Book your free call" id="${CAL}_apply"></iframe>`;
- if(!window._rtbEmbed){window._rtbEmbed=1;const sc=document.createElement('script');sc.src='https://grow-api.hapana.com/js/form_embed.js';document.body.appendChild(sc)}
- toStep();
-}
-
-const FAQ=[["Is this a gym membership?","No. It's a coached program. You get a plan written for you, a coach on every session and a group capped at 12."],
- ["I've never lifted. Is that a problem?","It's the most common starting point. Every lift is taught, and your weights start where you are."],
- ["How long are sessions?","50 minutes. Warm up, lift, done."],
- ["What happens after 21 days?","You can join the full 16 week RTB Program. Cancel any time."],
- ["Do I have to give up running?","No. Keep it if you love it. Just do it separately, never in the same session as your lifting."],
- G==='women'?["Will lifting make me bulky?","No. Building real size takes years of eating and training for it. In 21 days you get stronger, firmer and more confident."]
-            :["Will I lose my fitness without cardio?","Strength work gets your heart going. Most members say daily life feels easier within weeks."]];
-
-function paint(){
- const seg2=G+'-'+(GYM||'windsor');
- const LC=(window.LAB&&LAB.copy)||{};  /* landing page lab: a variant's copy wins over COPY */
- document.querySelectorAll('[data-t]').forEach(el=>{const k=el.dataset.t,v=COPY[k];el.innerHTML=k in LC?LC[k]:(v[G]||v[GYM]||v._||'')});
- if(!$('.hero-photo')){paintLite();return}  /* classic page (30 Oct 2026) has only the quiz from this template */
- document.querySelector('[data-src="heroImg"]').src=COPY.heroImg[G];
- if(G==='women'){document.querySelector('.hero-photo').classList.add('ba');document.querySelector('[data-t=heroLabel]').textContent='Real RTB member';document.querySelector('[data-t=heroCard]').textContent='Before and after, coached at RTB.'}
- if(G==='men'){document.querySelector('.hero-photo').classList.add('ba');document.querySelector('[data-t=heroLabel]').textContent='Josh Curry, RTB founder';document.querySelector('[data-t=heroCard]').textContent='Before and after, on the same program.'}
- $('#pains').innerHTML=[...COPY.pains[G],COPY.pain4[seg2]].map(p=>`<div class="ex"><b>${p[0]}</b><p>${p[1]}</p></div>`).join('');
- const ba=({women:[1,2,3,4,5,6,7,8],men:[9,10,11,12,13,14,15,16],all:[1,9,2,10,3,11,4,12]})[G];
- $('#gallery').innerHTML=ba.map(n=>`<img src="img/ba-${String(n).padStart(2,'0')}.jpg" alt="RTB member result" loading="lazy">`).join('');
- $('#tt').innerHTML=(GYM?[GYM]:['windsor','chelsea']).map(g=>`<div class="ttg"><h3>${COPY.loc[g]}</h3><p class="ad">${COPY.addr[g]}</p>${ttHTML(g)}</div>`).join('');
- $('#faq').innerHTML=FAQ.map((f,k)=>`<details ${k?'':'open'}><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join('');
-}
-function paintLite(){}
-paint();S=steps();render();
-/* Landing page lab flag q1hero (test AP01, 29 Oct 2026): the leak is before the form, so ask question 1 in the hero. */
-if(window.LAB&&LAB.flags&&LAB.flags.q1hero&&document.querySelector('.hero .ctarow')){
- const s0=S[0], gym=s0.type==='gym', row=document.querySelector('.hero .ctarow');
- const opts=gym?['windsor','chelsea'].map(g=>[g,COPY.loc[g]]):s0.opts.map(o=>[o,o]);
- row.outerHTML=`<div class="heroq"><p class="hq">${s0.q}</p><div class="opts">${opts.map(([v,t])=>`<button class="opt" data-hq="${esc(v)}">${t}</button>`).join('')}</div></div>`;
- document.querySelectorAll('[data-hq]').forEach(b=>b.onclick=()=>{
-  i=0;render();toStep();
-  const t=document.querySelector(gym?`.gymopt[data-gym="${b.dataset.hq}"]`:`#step .opt[data-o="${CSS.escape(b.dataset.hq)}"]`);
-  if(t) t.click();
- });
-}
-if(!window._rtbEmbed){window._rtbEmbed=1;const sc=document.createElement('script');sc.src='https://grow-api.hapana.com/js/form_embed.js';document.body.appendChild(sc)}
-/* Hide the sticky bar while the form or the quick booking calendar is on screen. */
-if('IntersectionObserver' in window){const seen=new Set();const io=new IntersectionObserver(es=>{es.forEach(e=>e.isIntersecting?seen.add(e.target):seen.delete(e.target));document.body.classList.toggle('inapply',seen.size>0)},{threshold:0.05});io.observe($('#apply'));if($('#quickbook'))io.observe($('#quickbook'))}
+if(!window._rtbEmbed){window._rtbEmbed=1;var s=document.createElement('script');s.src='https://grow-api.hapana.com/js/form_embed.js';document.body.appendChild(s)}
+var box=document.getElementById('apply'),cal=box.querySelector('iframe');
+/* Clicks inside the calendar can't be seen; the page losing focus to it is the tell. Counts as starting the booking. */
+addEventListener('blur',function(){setTimeout(function(){if(document.activeElement===cal&&window.LAB)LAB.ev('form_start',{src:'calendar'})},0)});
+/* Hide the sticky bar while the calendar is on screen. */
+if('IntersectionObserver' in window)new IntersectionObserver(function(es){document.body.classList.toggle('inapply',es[0].isIntersecting)},{threshold:0.05}).observe(box);
 })();
 </script>
 <footer>

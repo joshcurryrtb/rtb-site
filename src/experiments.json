@@ -104,6 +104,38 @@
         }
       },
       "note": "Built for the old quiz page (apply-quiz*). Rework for the classic page before running."
+    },
+    {
+      "id": "AP05",
+      "name": "V2 page (Undeniable structure) vs classic page",
+      "status": "draft",
+      "pages": [
+        "apply-women",
+        "apply-men",
+        "apply",
+        "reset-chelsea",
+        "apply-v2-women",
+        "apply-v2-men",
+        "apply-v2",
+        "reset-chelsea-v2"
+      ],
+      "primary": "booked",
+      "hypothesis": "Josh's coach's page (Undeniable Scale Workshop) structure: qualifier bar, video hero, results first, founder letter inviting scepticism, is / isn't for you, week by week, calendar in page, FAQ after. Both sides calendar first (1 Nov 2026). Same Meta link: the lab redirects half the visitors to the v2 page.",
+      "started": null,
+      "variants": {
+        "A": {
+          "note": "Control: classic page, calendar first"
+        },
+        "B": {
+          "note": "V2 page",
+          "redirect": {
+            "apply-women": "apply-v2-women",
+            "apply-men": "apply-v2-men",
+            "apply": "apply-v2",
+            "reset-chelsea": "reset-chelsea-v2"
+          }
+        }
+      }
     }
   ]
 }
