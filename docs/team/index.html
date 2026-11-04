@@ -95,7 +95,7 @@ details.fin summary{cursor:pointer;font-family:'Anton';text-transform:uppercase;
 const API = 'https://lilmmmxgoprrvsnrzppb.supabase.co/functions/v1/activation';
 const DEMO = null;
 const STEP_ORDER = ['d0','d1','d3','d7','d21'];
-const DAYLBL = {d0:'DAY 0',d1:'DAY 1',d3:'DAY 3',d7:'DAY 7',d21:'DAY 21'};
+const DAYLBL = {d0:'DAY 0',d1:'DAY 1',d3:'DAY 3',d7:'WEEK 2',d21:'DAY 21'};
 let S = null, token = null, gymTab = 'all', openId = null, demoAs = null;
 
 const $ = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content; };
@@ -263,7 +263,7 @@ function personRow(m){
   const el = $(`<button class="person"><div><div class="nm">${esc(m.first_name)} ${esc(m.last_name)}</div>
     <div class="sub">${m.gym === 'windsor' ? 'Windsor' : 'Chelsea'} · ${m.coach_id ? 'first class ' + fmtDay(m.first_class || m.start_date) + ' with ' + esc(staffName(m.coach_id)) : m.sessions_done ? 'already training' : '<span style="color:var(--red)">first class not set</span>'} · ${day === null ? '' : day < 1 ? 'starts ' + fmtDay(m.first_class || m.start_date) : day > 21 ? 'trial ended' : 'day ' + day + ' of 21'}</div></div>
     <div>${m.outcome === 'joined' ? '<span class="chip ok">Joined</span>' : m.outcome === 'not_joined' ? '<span class="chip">Didn\'t join</span>' : `<span class="chip">${m.sessions_done} done · ${m.sessions_booked} booked</span>`}</div>
-    <div class="track">${STEP_ORDER.map(k => `<span class="dot ${stateOf(jobOf(m.id, k))}">${DAYLBL[k].replace('DAY ', 'D')}</span>`).join('')}</div></button>`);
+    <div class="track">${STEP_ORDER.map(k => `<span class="dot ${stateOf(jobOf(m.id, k))}">${DAYLBL[k].replace('DAY ', 'D').replace('WEEK ', 'W')}</span>`).join('')}</div></button>`);
   el.firstChild.onclick = () => openDrawer(m.id);
   return el;
 }
