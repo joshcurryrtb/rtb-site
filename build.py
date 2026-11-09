@@ -43,6 +43,10 @@ V2_YES={'all':['You want to get stronger and leaner without living on a treadmil
   "You've done the classes and the cardio and want to finally see it show",'You like a small group, not a packed class of 40','You can train 2 to 5 times a week for 21 days',"You're coachable and ready to follow a plan"],
  'men':['You want to get strong and drop the gut without endless cardio','You want a coach checking your form so you lift heavy without getting hurt',
   "You've trained on and off for years and want a plan that actually adds up",'You like a small group, not a packed class of 40','You can train 2 to 5 times a week for 21 days',"You're coachable and ready to follow a plan"]}
+# V3 pages (10 Nov 2026, Josh): classic + v2 mixed, short, with a 4 screen application form (the Meta instant form's 3 questions)
+# back in front of the calendar. Headline fixed: 21 Day Strength Reset / Zero cardio classes only. Reached by lab redirect (AP06).
+V3={'apply-v3':('all','','v3'),'reset-chelsea-v3':('all','chelsea','v3'),'apply-c3':('all','','c3'),'reset-chelsea-c3':('all','chelsea','c3')}  # ONE neutral page (Josh, 10 Nov 2026: no men/women split); the Chelsea one is the same page with the gym preset
+V3_BAR="<b>Warning:</b> we only have 10 trials per month. Don't hesitate."  # Josh, 10 Nov 2026
 c_style=tpl[:tpl.index('</style>')+8]
 CAL_ID='8KzUE6BBWRni8g9f0wd5'
 def cal_block(gym,dark):
@@ -73,25 +77,37 @@ for pg,(g,gym) in V2.items():
     b=vb.replace('<!--CAL-->',cal_block(gym,True)).replace('{{yes}}',''.join(f'<li>{x}</li>' for x in V2_YES[g]))
     for k,v in V2_COPY[g].items(): b=b.replace('{{'+k+'}}',v)
     sources.append((pg,'<!-- title:21 Day Strength Reset | RTB Gym|desc:Coached strength training capped at 12 in Windsor and Chelsea Heights. 21 days, $150, all inclusive. -->\n'+c_style+b+CAL_JS))
+v3b=(src/'_v3.body.html').read_text()
+# c3 = the classic page with the same changes. It borrows the booking band and the form script from the v3 file, so there is ONE form to maintain.
+v3band=v3b[v3b.index('<section class="v-book"'):]; v3band=v3band[:v3band.index('</section>')+10]
+v3js=v3b[v3b.rindex('<script>\n(function(){'):]
+v3band2=v3band.replace('id="apply"','id="apply2"').replace('data-cta="buy-top"','data-cta="buy-mid"')  # the same band again, just before the Google reviews (Josh, 10 Nov 2026)
+c3b=(src/'_c3.body.html').read_text().replace('<!--BAND-->',v3band).replace('<!--BAND2-->',v3band2).replace('<!--FORMJS-->',v3js)
+v3b=v3b.replace('<!--BAND2-->',v3band2)
+for pg,(g,gym,t) in V3.items():
+    b=(v3b if t=='v3' else c3b).replace('__G__',g).replace('__GYM__',gym).replace('{{yes}}',''.join(f'<li>{x}</li>' for x in V2_YES[g]))
+    for k in ('faqq','faqa'): b=b.replace('{{'+k+'}}',V2_COPY[g][k])
+    sources.append((pg,'<!-- title:21 Day Strength Reset | RTB Gym|desc:Zero cardio classes only. Coached strength classes capped at 12 in Windsor and Chelsea Heights. 21 days, $150, all inclusive. -->\n'+c_style+b))
 for page,body in sources:
     m=re.search(r'<!--\s*title:(.*?)\|desc:(.*?)-->',body,re.S)
     title=m.group(1).strip() if m else 'RTB Gym'; desc=m.group(2).strip() if m else ''
     out=head.replace('__TITLE__',title).replace('__DESC__',desc).replace('__PAGE__',page)+body+foot
     QUIZ=['apply-quiz'+k[5:] for k in APPLY]
-    if page=='reset' or page in QUIZ or page in CLASSIC or page in V2 or page.startswith('reset-') or page.startswith('experience-'):  # ad landing page: no way off the page except booking
+    if page=='reset' or page in QUIZ or page in CLASSIC or page in V2 or page in V3 or page.startswith('reset-') or page.startswith('experience-'):  # ad landing page: no way off the page except booking
         out=re.sub(r'<a href="index.html">(<img class="logo"[^>]*>)</a>',r'\1',out)
         out=re.sub(r'\s*<button class="burger".*?</button>','',out,flags=re.S)
         out=re.sub(r'\s*<div class="links">.*?</div>','',out,count=1,flags=re.S)
-        if page in CLASSIC or page in V2:
+        if page in CLASSIC or page in V2 or page in V3:
             out=out.replace('href="apply.html#apply"','href="#apply"').replace('href="apply.html"','href="#apply"')
-            if page in V2: out=out.replace('<nav class="nav" id="nav">','<nav class="nav" id="nav">\n  <div class="qbar">'+V2_COPY[V2[page][0]]['bar']+'</div>',1)
+            if page in V2 or page in V3: out=out.replace('<nav class="nav" id="nav">','<nav class="nav" id="nav">\n  <div class="qbar">'+(V3_BAR if page in V3 else V2_COPY[V2[page][0]]['bar'])+'</div>',1)
+            if page in V3: out=out.replace('>Book a free call</a>','>Explore my options</a>')
             if page!='apply': out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
         if page in QUIZ:
             out=out.replace('<a class="cta" href="apply.html#apply">Book a free call</a>','<a class="cta" href="#apply">Explore my options</a>')
             out=out.replace('href="apply.html#apply"','href="#apply"').replace('href="apply.html"','href="#apply"')
             if page!='apply': out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
         out=out.replace('href="reset.html#book"','href="#book"')
-        if (page.startswith('reset-') or page.startswith('experience-')) and page not in CLASSIC and page not in V2:  # gym specific ad pages (22 Oct 2026): ad only, every CTA stays on the page
+        if (page.startswith('reset-') or page.startswith('experience-')) and page not in CLASSIC and page not in V2 and page not in V3:  # gym specific ad pages (22 Oct 2026): ad only, every CTA stays on the page
             out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
             out=out.replace('href="apply.html#apply"','href="#book"').replace('href="apply.html"','href="#book"')
             if page.startswith('experience-'): out=out.replace('>Book a free call</a>','>Claim your free pass</a>')  # free pass page, no call

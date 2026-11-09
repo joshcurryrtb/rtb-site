@@ -108,7 +108,7 @@
     {
       "id": "AP05",
       "name": "V2 page (Undeniable structure) vs classic page",
-      "status": "live",
+      "status": "done",
       "pages": [
         "apply-women",
         "apply-men",
@@ -135,7 +135,47 @@
             "reset-chelsea": "reset-chelsea-v2"
           }
         }
-      }
+      },
+      "result": "Ended 10 Nov 2026 without a readable result (LAB_KEY never set, so the report could not run). Josh replaced both sides with the updated pages: see AP06."
+    },
+    {
+      "id": "AP06",
+      "name": "Updated classic vs V3: both with the application form before the calendar",
+      "status": "live",
+      "pages": [
+        "apply-women",
+        "apply-men",
+        "apply",
+        "reset-chelsea",
+        "apply-c3",
+        "reset-chelsea-c3",
+        "apply-v3",
+        "reset-chelsea-v3"
+      ],
+      "primary": "booked",
+      "hypothesis": "Both AP05 pages go straight to the calendar, so anyone who doesn't book leaves no details. Both new pages carry Josh's fixed headline (21 Day Strength Reset / Zero cardio classes only), his sub line, the 10 trials warning bar, the Meta instant form's 3 questions plus contact details before the calendar straight under the video, and a confirmed items only offer stack. One neutral page each, no men/women split. So this tests layout only: classic (photo hero, old Squarespace order) vs V3 (centred hero, letter, is it for you, FAQ). Watch booked per view AND leads per view.",
+      "started": "2026-11-10",
+      "variants": {
+        "A": {
+          "note": "Updated classic page",
+          "redirect": {
+            "apply-women": "apply-c3",
+            "apply-men": "apply-c3",
+            "apply": "apply-c3",
+            "reset-chelsea": "reset-chelsea-c3"
+          }
+        },
+        "B": {
+          "note": "V3 page",
+          "redirect": {
+            "apply-women": "apply-v3",
+            "apply-men": "apply-v3",
+            "apply": "apply-v3",
+            "reset-chelsea": "reset-chelsea-v3"
+          }
+        }
+      },
+      "note": "LIVE 10 Nov 2026 (Josh: 'we are using these from now on'). Every ad link (apply, apply-women, apply-men, reset-chelsea) sends 50/50 to the updated classic or the V3 page. Min 14 days, 250 per side, 95%."
     }
   ]
 }
