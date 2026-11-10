@@ -193,12 +193,12 @@
       <script src="https://elfsightcdn.com/platform.js" async></script>
       <div class="elfsight-app-8dee4dcc-abe6-4e79-b12b-595a0dac35fa" data-elfsight-app-lazy></div>
     </div>
-    <div class="v-go" style="margin-top:44px"><a class="btn red" href="#apply" data-cta="final">Explore my options →</a></div>
+    <div class="v-go" style="margin-top:44px"><a class="btn red" href="#apply" data-cta="final">GET ME STRONG →</a></div>
   </div>
 </section>
 <p class="v-small">Results vary from person to person and depend on attendance, effort and nutrition. The members shown trained at RTB and gave permission to share their results.</p>
 
-<div class="sticky"><a href="#apply" data-cta="sticky">Explore my options →</a></div>
+<div class="sticky"><a href="#apply" data-cta="sticky">GET ME STRONG →</a></div>
 
 <script>
 (function(){
@@ -278,7 +278,7 @@ function draw(R,k){
   </form>`;
  else if(s.type==='text') h+=`<label class="field"><textarea class="t1" rows="3" maxlength="800" placeholder="${s.ph}">${esc(A[s.id]||'')}</textarea></label>`;
  else h+=`<div class="opts">${s.opts.map(o=>`<button class="opt ${A[s.id]===o?'on':''}" data-o="${esc(o)}">${o}</button>`).join('')}</div>`;
- const prim=s.type==='contact'?`<button type="submit" form="cf${k}" class="cta go">Explore my options</button>`:s.type==='text'?'<button class="cta go">Continue</button>':'<span></span>';
+ const prim=s.type==='contact'?`<button type="submit" form="cf${k}" class="cta go">GET ME STRONG</button>`:s.type==='text'?'<button class="cta go">Continue</button>':'<span></span>';
  h+=`<div class="err"></div><div class="nav2">${i>0?'<button class="back">← Back</button>':'<span></span>'}${prim}</div>`;
  q('.stepwrap').innerHTML=h;
  const back=q('.back'); if(back) back.onclick=()=>{i--;render()};

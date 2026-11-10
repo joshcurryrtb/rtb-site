@@ -100,7 +100,7 @@ for page,body in sources:
         if page in CLASSIC or page in V2 or page in V3:
             out=out.replace('href="apply.html#apply"','href="#apply"').replace('href="apply.html"','href="#apply"')
             if page in V2 or page in V3: out=out.replace('<nav class="nav" id="nav">','<nav class="nav" id="nav">\n  <div class="qbar">'+(V3_BAR if page in V3 else V2_COPY[V2[page][0]]['bar'])+'</div>',1)
-            if page in V3: out=out.replace('>Book a free call</a>','>Explore my options</a>')
+            if page in V3: out=out.replace('>Book a free call</a>','>GET ME STRONG</a>')
             if page!='apply': out=out.replace('<meta property="og:type"','<meta name="robots" content="noindex">\n<meta property="og:type"',1)
         if page in QUIZ:
             out=out.replace('<a class="cta" href="apply.html#apply">Book a free call</a>','<a class="cta" href="#apply">Explore my options</a>')
