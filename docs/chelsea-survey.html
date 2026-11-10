@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Help us build what's next | RTB Chelsea Heights</title>
+<meta name="description" content="RTB Chelsea Heights members: rank what you want us to add next. Takes under 2 minutes.">
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:title" content="Help us build what's next at RTB Chelsea Heights">
+<meta property="og:description" content="Rank what matters most to you. Takes under 2 minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Epilogue:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<!-- Member survey (Nov 2026). Standalone on purpose: no pixel, no analytics, no lab. Source of truth is this file.
+     Backend + results page: ~/Desktop/Files/BUILDS/chelsea-survey -->
+<style>
+body{font-size:17px}
+.top{background:var(--ink);padding:14px var(--pad)}
+.top img{height:30px;width:auto}
+.sv{max-width:680px;margin:0 auto;padding:34px 18px 120px}
+.sv h1{font-size:clamp(40px,9.5vw,68px)}
+.sv .intro{font-size:18px;color:var(--ink);margin-top:20px}
+.q{margin-top:44px}
+.q h2{font-size:clamp(26px,6vw,36px)}
+.q .help{color:var(--grey);font-size:15.5px;margin-top:8px}
+.prog{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0 10px;margin-top:14px;display:flex;align-items:center;gap:12px}
+.prog b{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.prog .track{flex:1;height:6px;background:var(--line)}
+.prog .track i{display:block;height:100%;width:0;background:var(--ink);transition:width .2s}
+.zone{font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--grey);margin:18px 0 8px}
+.item{width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);padding:14px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;-webkit-tap-highlight-color:transparent}
+button.item{cursor:pointer}
+button.item:active{border-color:var(--ink)}
+.item .t{flex:1;min-width:0;font-weight:600;line-height:1.3}
+.item .t small{display:block;font-weight:400;color:var(--grey);font-size:14.5px;margin-top:3px;line-height:1.4}
+.item .plus{flex:0 0 auto;width:34px;height:34px;border:1px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-size:20px;line-height:1}
+.item.on{border-color:var(--ink)}
+.item .n{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-family:'Anton',sans-serif;font-size:17px}
+.item .mv{flex:0 0 auto;display:flex;gap:4px}
+.item .mv button{width:38px;height:38px;border:1px solid var(--line);background:var(--bg);font-size:16px;line-height:1;cursor:pointer;color:var(--ink);border-radius:0;padding:0}
+.item .mv button:disabled{opacity:.25}
+.item .mv button.x{border-color:transparent;background:none;color:var(--grey);font-size:20px}
+.empty{border:1px dashed var(--line);padding:16px;color:var(--grey);font-size:15px;text-align:center;margin-bottom:8px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.pills label{cursor:pointer}
+.pills input{position:absolute;opacity:0;pointer-events:none}
+.pills span{display:inline-block;border:1px solid var(--ink);border-radius:300px;padding:12px 22px;font-weight:600;background:var(--card)}
+.pills input:checked+span{background:var(--ink);color:#fff}
+.pills input:focus-visible+span{outline:2px solid var(--red);outline-offset:2px}
+textarea,input[type=text],input[type=email]{width:100%;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);padding:14px;margin-top:14px;border-radius:0;-webkit-appearance:none}
+textarea{min-height:110px;resize:vertical}
+textarea:focus,input[type=text]:focus,input[type=email]:focus{outline:none;border-color:var(--ink)}
+.send{margin-top:40px}
+.send .cta{width:100%;border:0;cursor:pointer;text-align:center}
+.send .cta:disabled{background:var(--line);color:var(--grey);cursor:not-allowed;transform:none}
+.send .cta:disabled:after{content:""}
+.msg{margin-top:12px;color:var(--grey);font-size:15px;text-align:center;min-height:22px}
+.msg.err{color:var(--red);font-weight:600}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.done{display:none;text-align:center;padding-top:10vh}
+.done .lede{margin-inline:auto}
+body.sent .form{display:none}
+body.sent .done{display:block}
+</style>
+</head>
+<body>
+<div class="top"><img src="img/logo.png" alt="RTB Gym"></div>
+
+<main class="sv">
+  <div class="form">
+    <div class="label">RTB Chelsea Heights members</div>
+    <h1 style="margin-top:12px">Help us build what's next at RTB Chelsea Heights</h1>
+    <p class="intro">We want to put our money where it matters most to you. Rank the options below from 1 (most important to you) to 15 (least important). Takes under 2 minutes. Thank you!</p>
+
+    <div class="q">
+      <h2>Rank these from most to least important to you</h2>
+      <p class="help">Tap them in order. Your first tap is your number 1. Use the arrows to change your mind.</p>
+      <div class="prog"><b id="count">0 of 15 ranked</b><div class="track"><i id="fill"></i></div></div>
+      <div class="zone" id="rankedLabel">Your ranking</div>
+      <div id="ranked"></div>
+      <div class="zone" id="poolLabel">Tap to add</div>
+      <div id="pool"></div>
+    </div>
+
+    <div class="q">
+      <h2>If we launched dedicated coaches, who would you choose?</h2>
+      <div class="pills" id="coach">
+        <label><input type="radio" name="coach" value="sam"><span>Coach Sam</span></label>
+        <label><input type="radio" name="coach" value="brett"><span>Coach Brett</span></label>
+        <label><input type="radio" name="coach" value="none"><span>No preference</span></label>
+      </div>
+    </div>
+
+    <div class="q">
+      <h2>Anything else you'd love to see at RTB Chelsea Heights?</h2>
+      <p class="help">Optional</p>
+      <textarea id="more" maxlength="1500"></textarea>
+    </div>
+
+    <div class="q">
+      <h2>Your email</h2>
+      <p class="help">So every member gets one vote.</p>
+      <input type="email" id="email" maxlength="160" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false">
+    </div>
+
+    <div class="hp" aria-hidden="true"><label>Website <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+    <div class="send">
+      <button class="cta" id="send" disabled>Send my ranking</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <div class="done">
+    <div class="label">RTB Chelsea Heights</div>
+    <h1 style="margin-top:12px">Legend, thank you!</h1>
+    <p class="lede">We'll share the results and what we're building first very soon.</p>
+  </div>
+</main>
+
+<script>
+(function(){
+var API='https://vocal-quokka-7ae2d7.netlify.app/.netlify/functions/survey';
+var OPTS=[
+ [1,'Plate loaded seated row'],[2,'Glute adductor machine'],[3,'Bicep machine'],[4,'Cable machine'],
+ [5,'Assault bike'],[6,'Rower'],[7,'Stairmaster'],[8,'Curved treadmill'],
+ [9,'Open gym access outside of class times'],
+ [10,'More nutrition coaching and easier access to nutrition help'],
+ [11,'Your own dedicated coach','Choose Coach Sam or Coach Brett, join their WhatsApp group to message them whenever you need extra help, plus a monthly accountability check in'],
+ [12,'More community events with RTB folk outside the gym'],
+ [13,'Better hang out area'],
+ [14,'Cafe'],
+ [15,'New morning class times to fit in 1 more class and free up spots','5:00 to 5:50, 5:50 to 6:40, 6:40 to 7:30 and 7:30 to 8:20']
+];
+var N=OPTS.length,BY={};OPTS.forEach(function(o){BY[o[0]]=o});
+var TEST=/[?&]test=1/.test(location.search);
+var LS='rtb_ch_survey_v1';
+var st={rank:[],order:[],coach:'',more:'',email:'',sent:false};
+var EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function save(){try{localStorage.setItem(LS,JSON.stringify(st))}catch(e){}}
+try{var old=JSON.parse(localStorage.getItem(LS)||'null');if(old&&Array.isArray(old.rank))st=old}catch(e){}
+var okIds=function(a){return Array.isArray(a)&&a.every(function(x){return BY[x]})&&new Set(a).size===a.length};
+if(!okIds(st.rank))st.rank=[];
+if(!okIds(st.order)||st.order.length!==N){
+  // Everyone sees the options in a different order, so nothing wins just for being listed first.
+  st.order=OPTS.map(function(o){return o[0]});
+  for(var i=N-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=st.order[i];st.order[i]=st.order[j];st.order[j]=t}
+}
+if(st.sent&&!TEST){document.body.classList.add('sent');return}
+st.sent=false;
+
+function label(o){return '<span class="t">'+esc(o[1])+(o[2]?'<small>'+esc(o[2])+'</small>':'')+'</span>'}
+function draw(){
+  var r=$('ranked'),p=$('pool'),h='';
+  st.rank.forEach(function(id,ix){
+    h+='<div class="item on"><span class="n">'+(ix+1)+'</span>'+label(BY[id])+'<span class="mv">'
+      +'<button type="button" data-a="up" data-id="'+id+'" aria-label="Move up"'+(ix===0?' disabled':'')+'>&#9650;</button>'
+      +'<button type="button" data-a="down" data-id="'+id+'" aria-label="Move down"'+(ix===st.rank.length-1?' disabled':'')+'>&#9660;</button>'
+      +'<button type="button" class="x" data-a="del" data-id="'+id+'" aria-label="Remove">&times;</button></span></div>';
+  });
+  r.innerHTML=h||'<div class="empty">Nothing ranked yet. Tap your number 1 below.</div>';
+  var left=st.order.filter(function(id){return st.rank.indexOf(id)<0});
+  p.innerHTML=left.map(function(id){return '<button type="button" class="item" data-a="add" data-id="'+id+'">'+label(BY[id])+'<span class="plus">+</span></button>'}).join('');
+  $('poolLabel').style.display=left.length?'':'none';
+  $('poolLabel').textContent=st.rank.length?'Tap your number '+(st.rank.length+1):'Tap your number 1';
+  $('count').textContent=st.rank.length+' of '+N+' ranked';
+  $('fill').style.width=(st.rank.length/N*100)+'%';
+  check();
+}
+function check(){
+  var need=st.rank.length<N?'Rank all '+N+' to send. '+(N-st.rank.length)+' to go.':(!st.coach?'One more: pick a coach option above.':(!EMAIL.test((st.email||'').trim())?'Last one: add your email.':''));
+  $('send').disabled=!!need;
+  var m=$('msg');if(!m.classList.contains('err'))m.textContent=need;
+}
+document.querySelector('.form').addEventListener('click',function(e){
+  var b=e.target.closest('[data-a]');if(!b)return;
+  var id=Number(b.getAttribute('data-id')),a=b.getAttribute('data-a'),ix=st.rank.indexOf(id);
+  if(a==='add'&&ix<0){
+    st.rank.push(id);
+    if(st.rank.length===N-1){var last=st.order.filter(function(x){return st.rank.indexOf(x)<0})[0];st.rank.push(last)} // last one left can only be the last number
+  }
+  if(a==='del'&&ix>=0)st.rank.splice(ix,1);
+  if(a==='up'&&ix>0){st.rank.splice(ix,1);st.rank.splice(ix-1,0,id)}
+  if(a==='down'&&ix>=0&&ix<st.rank.length-1){st.rank.splice(ix,1);st.rank.splice(ix+1,0,id)}
+  $('msg').classList.remove('err');
+  save();draw();
+});
+$('coach').addEventListener('change',function(e){st.coach=e.target.value;$('msg').classList.remove('err');save();check()});
+$('more').addEventListener('input',function(){st.more=this.value;save()});
+$('email').addEventListener('input',function(){st.email=this.value;$('msg').classList.remove('err');save();check()});
+if(st.coach){var c=document.querySelector('input[name=coach][value="'+st.coach+'"]');if(c)c.checked=true}
+$('more').value=st.more||'';$('email').value=st.email||'';
+
+$('send').addEventListener('click',function(){
+  var btn=this,m=$('msg');
+  btn.disabled=true;btn.textContent='Sending';m.classList.remove('err');m.textContent='';
+  fetch(API,{method:'POST',headers:{'content-type':'application/json'},
+    body:JSON.stringify({action:'submit',rank:st.rank,coach:st.coach,more:st.more,email:st.email.trim(),website:$('website').value,test:TEST})})
+  .then(function(r){if(r.status===409)return {};if(!r.ok)throw 0;return r.json()})
+  .then(function(){st.sent=true;save();document.body.classList.add('sent');scrollTo(0,0)})
+  .catch(function(){btn.disabled=false;btn.textContent='Send my ranking';m.classList.add('err');m.textContent="That didn't send. Check your connection and tap again."});
+});
+draw();
+})();
+</script>
+</body>
+</html>
