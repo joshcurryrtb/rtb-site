@@ -93,6 +93,15 @@ body.sent .done{display:block}
     </div>
 
     <div class="q">
+      <h2>Would you be keen on a body comp challenge?</h2>
+      <div class="pills" id="challenge">
+        <label><input type="radio" name="challenge" value="yes"><span>Yes</span></label>
+        <label><input type="radio" name="challenge" value="maybe"><span>Maybe</span></label>
+        <label><input type="radio" name="challenge" value="no"><span>No</span></label>
+      </div>
+    </div>
+
+    <div class="q">
       <h2>Anything else you'd love to see at RTB Chelsea Heights?</h2>
       <p class="help">Optional</p>
       <textarea id="more" maxlength="1500"></textarea>
@@ -136,7 +145,7 @@ var OPTS=[
 var N=OPTS.length,BY={};OPTS.forEach(function(o){BY[o[0]]=o});
 var TEST=/[?&]test=1/.test(location.search);
 var LS='rtb_ch_survey_v1';
-var st={rank:[],order:[],coach:'',more:'',email:'',sent:false};
+var st={rank:[],order:[],coach:'',challenge:'',more:'',email:'',sent:false};
 var EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -171,7 +180,7 @@ function draw(){
   check();
 }
 function check(){
-  var need=st.rank.length<N?'Rank all '+N+' to send. '+(N-st.rank.length)+' to go.':(!st.coach?'One more: pick a coach option above.':(!EMAIL.test((st.email||'').trim())?'Last one: add your email.':''));
+  var need=st.rank.length<N?'Rank all '+N+' to send. '+(N-st.rank.length)+' to go.':(!st.coach?'One more: pick a coach option above.':!st.challenge?'One more: answer the body comp challenge question.':(!EMAIL.test((st.email||'').trim())?'Last one: add your email.':''));
   $('send').disabled=!!need;
   var m=$('msg');if(!m.classList.contains('err'))m.textContent=need;
 }
@@ -189,6 +198,8 @@ document.querySelector('.form').addEventListener('click',function(e){
   save();draw();
 });
 $('coach').addEventListener('change',function(e){st.coach=e.target.value;$('msg').classList.remove('err');save();check()});
+$('challenge').addEventListener('change',function(e){st.challenge=e.target.value;$('msg').classList.remove('err');save();check()});
+if(st.challenge){var ch=document.querySelector('input[name=challenge][value="'+st.challenge+'"]');if(ch)ch.checked=true}
 $('more').addEventListener('input',function(){st.more=this.value;save()});
 $('email').addEventListener('input',function(){st.email=this.value;$('msg').classList.remove('err');save();check()});
 if(st.coach){var c=document.querySelector('input[name=coach][value="'+st.coach+'"]');if(c)c.checked=true}
@@ -198,7 +209,7 @@ $('send').addEventListener('click',function(){
   var btn=this,m=$('msg');
   btn.disabled=true;btn.textContent='Sending';m.classList.remove('err');m.textContent='';
   fetch(API,{method:'POST',headers:{'content-type':'application/json'},
-    body:JSON.stringify({action:'submit',rank:st.rank,coach:st.coach,more:st.more,email:st.email.trim(),website:$('website').value,test:TEST})})
+    body:JSON.stringify({action:'submit',rank:st.rank,coach:st.coach,challenge:st.challenge,more:st.more,email:st.email.trim(),website:$('website').value,test:TEST})})
   .then(function(r){if(r.status===409)return {};if(!r.ok)throw 0;return r.json()})
   .then(function(){st.sent=true;save();document.body.classList.add('sent');scrollTo(0,0)})
   .catch(function(){btn.disabled=false;btn.textContent='Send my ranking';m.classList.add('err');m.textContent="That didn't send. Check your connection and tap again."});
