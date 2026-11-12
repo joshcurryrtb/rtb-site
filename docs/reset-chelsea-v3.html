@@ -469,6 +469,9 @@ let S=[],i=0,A={};
 /* The band can sit on the page more than once (under the video and again before the reviews). Every copy shows the same step. */
 const ROOTS=[...document.querySelectorAll('.v-book')];
 function toForm(k){const y=ROOTS[k].getBoundingClientRect().top+scrollY-56;window.scrollTo({top:y,behavior:'smooth'})}
+/* Per question tracking (12 Nov 2026). The lab backend only stores a fixed list of event names, so each step is a
+   form_start row with props: a = done | err | back, step = question id. LAB sends each (a, step) pair once. */
+function stepEv(a,x){try{if(window.LAB){LAB.sid=ST.sid;LAB.ev('form_start',Object.assign({k:a+'_'+S[i].id,a:a,step:S[i].id,n:i+1},x||{}))}}catch(e){}}
 function next(k){i++;render();toForm(k)}
 function render(){ROOTS.forEach(draw)}
 function draw(R,k){
@@ -487,13 +490,13 @@ function draw(R,k){
  const prim=s.type==='contact'?`<button type="submit" form="cf${k}" class="cta go">GET ME STRONG</button>`:s.type==='text'?'<button class="cta go">Continue</button>':'<span></span>';
  h+=`<div class="err"></div><div class="nav2">${i>0?'<button class="back">← Back</button>':'<span></span>'}${prim}</div>`;
  q('.stepwrap').innerHTML=h;
- const back=q('.back'); if(back) back.onclick=()=>{i--;render()};
- if(s.type==='gym') R.querySelectorAll('.gymopt').forEach(b=>b.onclick=()=>{GYM=b.dataset.gym;ST.gym=GYM;save();next(k)});
- if(s.type==='single') R.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{started();A[s.id]=b.dataset.o;R.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x===b));setTimeout(()=>next(k),160)});
- if(s.type==='text'){q('.t1').oninput=started;q('.go').onclick=()=>{const v=q('.t1').value.trim();if(v.length<10){q('.err').textContent='Tell us a little more. A sentence is plenty.';return}A[s.id]=v;next(k)}}
+ const back=q('.back'); if(back) back.onclick=()=>{stepEv('back');i--;render()};
+ if(s.type==='gym') R.querySelectorAll('.gymopt').forEach(b=>b.onclick=()=>{GYM=b.dataset.gym;ST.gym=GYM;save();stepEv('done');next(k)});
+ if(s.type==='single') R.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{started();A[s.id]=b.dataset.o;R.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x===b));stepEv('done');setTimeout(()=>next(k),160)});
+ if(s.type==='text'){q('.t1').oninput=started;q('.go').onclick=()=>{const v=q('.t1').value.trim();if(v.length<10){stepEv('err',{len:v.length});q('.err').textContent='Tell us a little more. A sentence is plenty.';return}A[s.id]=v;stepEv('done',{len:v.length});next(k)}}
  if(s.type==='contact') q('form').onsubmit=ev=>{ev.preventDefault();
   const f=q('.f1').value.trim(),e=q('.f2').value.trim().toLowerCase(),m=q('.f3').value.trim(),d=m.replace(/\D/g,'');
-  if(!f||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)||!/^(0\d{9}|61\d{9}|4\d{8})$/.test(d)){q('.err').textContent='Add your name, a valid email and your mobile.';return}
+  if(!f||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)||!/^(0\d{9}|61\d{9}|4\d{8})$/.test(d)){stepEv('err',{name:!!f,email:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e),mobile:/^(0\d{9}|61\d{9}|4\d{8})$/.test(d)});q('.err').textContent='Add your name, a valid email and your mobile.';return}
   A.first=f;A.email=e;A.mobile=m;
   /* Give Meta the hashed contact details before Lead fires, so the server copy can match the person. */
   if(LIVE&&window.fbq){try{fbq('init',PIXEL,{em:e,fn:f.toLowerCase(),ph:d.replace(/^0/,'61').replace(/^4/,'614'),external_id:ST.sid})}catch(x){}}
