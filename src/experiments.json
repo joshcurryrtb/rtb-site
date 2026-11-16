@@ -181,7 +181,7 @@
     {
       "id": "AP07",
       "name": "Classic: question 3 as tap buttons instead of typing",
-      "status": "live",
+      "status": "done",
       "pages": [
         "apply-women",
         "apply-men",
@@ -216,7 +216,48 @@
           }
         }
       },
-      "note": "LIVE 16 Nov 2026. Every ad link goes to classic c3 (V3 retired); half the visitors get tap buttons on question 3. Min 14 days, 250 per side, 95%."
+      "note": "LIVE 16 Nov 2026. Every ad link goes to classic c3 (V3 retired); half the visitors get tap buttons on question 3. Min 14 days, 250 per side, 95%.",
+      "result": "Not tested. Josh made the tap buttons the default on 16 Nov 2026, the same day, and moved to AP08."
+    },
+    {
+      "id": "AP08",
+      "name": "Classic: questions then calendar vs calendar only",
+      "status": "live",
+      "pages": [
+        "apply-women",
+        "apply-men",
+        "apply",
+        "reset-chelsea",
+        "apply-c3",
+        "reset-chelsea-c3"
+      ],
+      "primary": "booked",
+      "hypothesis": "The form in front of the calendar captures details from people who never book (Reece can chase them), but every extra step loses some people. Calendar only is one step to a booking. Judge on booked calls per visitor; leads per visitor only counts for A, so also weigh how many A non bookers Reece converts.",
+      "started": "2026-11-16",
+      "variants": {
+        "A": {
+          "note": "Control: classic c3, gym + 3 tap questions + details, then calendar",
+          "redirect": {
+            "apply-women": "apply-c3",
+            "apply-men": "apply-c3",
+            "apply": "apply-c3",
+            "reset-chelsea": "reset-chelsea-c3"
+          }
+        },
+        "B": {
+          "note": "Classic c3, calendar straight away, no questions",
+          "redirect": {
+            "apply-women": "apply-c3",
+            "apply-men": "apply-c3",
+            "apply": "apply-c3",
+            "reset-chelsea": "reset-chelsea-c3"
+          },
+          "flags": {
+            "calonly": true
+          }
+        }
+      },
+      "note": "LIVE 16 Nov 2026. Side B sends no Lead or SubmitApplication to Meta, only Schedule from /booked. Min 14 days, 250 per side, 95%."
     }
   ]
 }
