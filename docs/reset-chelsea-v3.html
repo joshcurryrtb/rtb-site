@@ -460,7 +460,10 @@ function steps(){
  const l=[
   {id:'coach',type:'single',q:'Have you had a coach before?',opts:['Yes','No, this would be my first']},
   {id:'hf',type:'single',q:'Have you tried the high frequency method?',opts:['Yes','No',"What's that?"]},
-  {id:'stop',type:'text',q:"What's stopped you getting the results you want so far?",ph:'A sentence is plenty.'},
+  /* AP07 B (16 Nov 2026): the typed question was the biggest quit point on classic, so B answers it with taps. */
+  (window.LAB&&LAB.flags&&LAB.flags.q3tap)
+   ?{id:'stop',type:'single',q:"What's stopped you getting the results you want so far?",opts:['No plan, I make it up as I go','Hard to stay motivated on my own','Too much cardio, not enough strength','Never been shown how to lift properly','Something else']}
+   :{id:'stop',type:'text',q:"What's stopped you getting the results you want so far?",ph:'A sentence is plenty.'},
   {id:'contact',type:'contact',q:'Last step. Where do we send your plan?',sub:'Apply and we send you 7 days of the RTB online program, free, straight to your inbox.'}];
  if(!GYM) l.unshift({id:'gym',type:'gym',q:'Which gym is closest to you?'});
  return l;
