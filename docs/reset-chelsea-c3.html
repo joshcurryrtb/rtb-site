@@ -524,6 +524,7 @@ function showCal(mine,k){
  if(!window._rtbEmbed){window._rtbEmbed=1;const sc=document.createElement('script');sc.src='https://grow-api.hapana.com/js/form_embed.js';document.body.appendChild(sc)}
 }
 S=steps();
+if(window.LAB&&LAB.flags&&LAB.flags.detonly) ROOTS.forEach(R=>{const l=R.querySelector('.apl');if(l)l.textContent='Add your details, then pick a time for a free 15 minute call.'});
 /* AP08 B (16 Nov 2026): no questions, no details, the Grow calendar straight away (the calendar takes name, email, mobile itself). */
 const CALONLY=!!(window.LAB&&LAB.flags&&LAB.flags.calonly);
 if(CALONLY||(ST.f_sa&&GYM)) showCal(false,0); else render();  /* already applied in this browser: straight to the calendar */
