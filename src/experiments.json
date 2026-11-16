@@ -222,7 +222,7 @@
     {
       "id": "AP08",
       "name": "Classic: questions then calendar vs calendar only",
-      "status": "live",
+      "status": "done",
       "pages": [
         "apply-women",
         "apply-men",
@@ -257,7 +257,48 @@
           }
         }
       },
-      "note": "LIVE 16 Nov 2026. Side B sends no Lead or SubmitApplication to Meta, only Schedule from /booked. Min 14 days, 250 per side, 95%."
+      "note": "LIVE 16 Nov 2026. Side B sends no Lead or SubmitApplication to Meta, only Schedule from /booked. Min 14 days, 250 per side, 95%.",
+      "result": "Replaced the same day (16 Nov 2026): Josh switched B from calendar only to details then calendar, see AP09."
+    },
+    {
+      "id": "AP09",
+      "name": "Classic: questions + details then calendar vs details then calendar (no questions)",
+      "status": "live",
+      "pages": [
+        "apply-women",
+        "apply-men",
+        "apply",
+        "reset-chelsea",
+        "apply-c3",
+        "reset-chelsea-c3"
+      ],
+      "primary": "booked",
+      "hypothesis": "Both sides capture name, email and mobile before the calendar, so Reece can chase every non booker and Meta gets Lead on both. B drops the 3 questions: fewer steps should mean more people get to the calendar. Cost: the coach has no answers before the call. Judge on booked per visitor, then leads per visitor.",
+      "started": "2026-11-16",
+      "variants": {
+        "A": {
+          "note": "Control: 3 tap questions + details, then calendar",
+          "redirect": {
+            "apply-women": "apply-c3",
+            "apply-men": "apply-c3",
+            "apply": "apply-c3",
+            "reset-chelsea": "reset-chelsea-c3"
+          }
+        },
+        "B": {
+          "note": "Details only, then calendar",
+          "redirect": {
+            "apply-women": "apply-c3",
+            "apply-men": "apply-c3",
+            "apply": "apply-c3",
+            "reset-chelsea": "reset-chelsea-c3"
+          },
+          "flags": {
+            "detonly": true
+          }
+        }
+      },
+      "note": "LIVE 16 Nov 2026. Gym picker shows on both sides only when the link has no gym. Min 14 days, 250 per side, 95%."
     }
   ]
 }
