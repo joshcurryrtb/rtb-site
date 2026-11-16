@@ -464,7 +464,7 @@ function steps(){
   {id:'stop',type:'single',q:"What's stopped you getting the results you want so far?",opts:['No plan, I make it up as I go','Hard to stay motivated on my own','Too much cardio, not enough strength','Never been shown how to lift properly','Something else']},
   {id:'contact',type:'contact',q:'Last step. Where do we send your plan?',sub:'Apply and we send you 7 days of the RTB online program, free, straight to your inbox.'}];
  /* AP09 B (16 Nov 2026): no questions, just name, email, mobile, then the calendar. */
- if(window.LAB&&LAB.flags&&LAB.flags.detonly){l.splice(0,3);l[0]=Object.assign({},l[0],{q:'Where do we send your plan?'})}
+ if(window.LAB&&LAB.flags&&LAB.flags.detonly){l.splice(0,3);l[0]=Object.assign({},l[0],{q:'',sub:''})}
  if(!GYM) l.unshift({id:'gym',type:'gym',q:'Which gym is closest to you?'});
  return l;
 }
@@ -479,7 +479,7 @@ function next(k){i++;render();toForm(k)}
 function render(){ROOTS.forEach(draw)}
 function draw(R,k){
  const s=S[i],q=x=>R.querySelector(x);q('.prog i').style.width=(i/S.length)*100+'%';
- let h=`<div class="stepnum">${s.type==='gym'?'Before you start':`Step ${i+1-(S[0].type==='gym'?1:0)} of ${S.filter(x=>x.type!=='gym').length+(S.length<3?1:0)}`}</div><div class="q">${s.q}</div>${s.sub?`<p class="qsub">${s.sub}</p>`:''}`;
+ let h=`<div class="stepnum">${s.type==='gym'?'Before you start':`Step ${i+1-(S[0].type==='gym'?1:0)} of ${S.filter(x=>x.type!=='gym').length+(S.length<3?1:0)}`}</div>${s.q?`<div class="q">${s.q}</div>`:''}${s.sub?`<p class="qsub">${s.sub}</p>`:''}`;
  if(s.type==='gym') h+=`<div class="opts">${['windsor','chelsea'].map(g=>`<button class="opt gymopt" data-gym="${g}">${LOC[g]}<small>${ADDR[g]}</small></button>`).join('')}</div>`;
  else if(s.type==='contact') h+=`<form id="cf${k}" method="post" action="#" autocomplete="on" novalidate>
   <label class="field"><span>First name</span><input class="f1" name="given-name" type="text" autocomplete="given-name" autocapitalize="words" enterkeyhint="next"></label>
