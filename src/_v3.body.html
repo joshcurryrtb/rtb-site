@@ -257,8 +257,9 @@ function steps(){
   /* Tap buttons since 16 Nov 2026 (Josh): the typed box with a 10 character minimum was the biggest quit point. */
   {id:'stop',type:'single',q:"What's stopped you getting the results you want so far?",opts:['No plan, I make it up as I go','Hard to stay motivated on my own','Too much cardio, not enough strength','Never been shown how to lift properly','Something else']},
   {id:'contact',type:'contact',q:'Last step. Where do we send your plan?',sub:'Apply and we send you 7 days of the RTB online program, free, straight to your inbox.'}];
- /* AP09 B (16 Nov 2026): no questions, just name, email, mobile, then the calendar. */
- if(window.LAB&&LAB.flags&&LAB.flags.detonly){l.splice(0,3);l[0]=Object.assign({},l[0],{q:'',sub:''})}
+ /* Details only for everyone since 20 Nov 2026 (Josh, AP09 result): no questions, just name, email, mobile, then the calendar.
+    The 3 questions stay above so they can come back by deleting this line. */
+ {l.splice(0,3);l[0]=Object.assign({},l[0],{q:'',sub:''})}
  if(!GYM) l.unshift({id:'gym',type:'gym',q:'Which gym is closest to you?'});
  return l;
 }
@@ -325,7 +326,7 @@ function showCal(mine,k){
  if(!window._rtbEmbed){window._rtbEmbed=1;const sc=document.createElement('script');sc.src='https://grow-api.hapana.com/js/form_embed.js';document.body.appendChild(sc)}
 }
 S=steps();
-if(window.LAB&&LAB.flags&&LAB.flags.detonly) ROOTS.forEach(R=>{const l=R.querySelector('.apl');if(l)l.textContent='Add your details, then pick a time for a free 15 minute call.'});
+ROOTS.forEach(R=>{const l=R.querySelector('.apl');if(l)l.textContent='Add your details, then pick a time for a free 15 minute call.'});
 /* AP08 B (16 Nov 2026): no questions, no details, the Grow calendar straight away (the calendar takes name, email, mobile itself). */
 const CALONLY=!!(window.LAB&&LAB.flags&&LAB.flags.calonly);
 if(CALONLY||(ST.f_sa&&GYM)) showCal(false,0); else render();  /* already applied in this browser: straight to the calendar */

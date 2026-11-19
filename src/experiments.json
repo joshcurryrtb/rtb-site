@@ -263,7 +263,7 @@
     {
       "id": "AP09",
       "name": "Classic: questions + details then calendar vs details then calendar (no questions)",
-      "status": "live",
+      "status": "done",
       "pages": [
         "apply-women",
         "apply-men",
@@ -298,7 +298,33 @@
           }
         }
       },
-      "note": "LIVE 16 Nov 2026. Gym picker shows on both sides only when the link has no gym. Min 14 days, 250 per side, 95%."
+      "note": "LIVE 16 Nov 2026. Gym picker shows on both sides only when the link has no gym. Min 14 days, 250 per side, 95%.",
+      "result": "Ended 20 Nov 2026 (about 3.5 days). A questions + details: 172 visitors, 7 started, 0 applied, 0 booked (3 answered all 3 questions then quit at the details step). B details only: 182 visitors, 8 started, 4 applied, 4 booked (2.2%). About 94% likely B is better. Josh: 'Go', details only made the default for everyone."
+    },
+    {
+      "id": "ROUTE",
+      "name": "Not a test: send every ad link to the classic c3 page",
+      "status": "live",
+      "pages": [
+        "apply-women",
+        "apply-men",
+        "apply",
+        "reset-chelsea"
+      ],
+      "primary": "booked",
+      "started": "2026-11-20",
+      "variants": {
+        "A": {
+          "note": "Classic c3, details only then calendar",
+          "redirect": {
+            "apply-women": "apply-c3",
+            "apply-men": "apply-c3",
+            "apply": "apply-c3",
+            "reset-chelsea": "reset-chelsea-c3"
+          }
+        }
+      },
+      "note": "lab.js only redirects for a live entry, so this one variant entry keeps the ad links on classic c3 between tests. Mark it done when the next test (which carries its own redirects) goes live."
     }
   ]
 }
